@@ -17,11 +17,13 @@
     <br />
     <a href="https://immunizationeconomics.org/verse-home">Learn about the project</a>
     ·
-    <a href="https://jh.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6a5667b4-6ca2-4e47-9ff6-ade4010b2a84">View Demo</a>
+    View Demo
     ·
     <a href="mailto:bpatenaude@jhu.edu">Report Bug</a>
     ·
     <a href="mailto:bpatenaude@jhu.edu">Request Feature</a>
+    ·
+    <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/LICENSE">Read the license</a>
   </p>
 </div>
 
@@ -47,7 +49,7 @@
         <li><a href="#available-vaccines">Available vaccines</a></li>
       </ul>
     </li>
-    <li><a href="#license">License</a></li>
+    <li><a href="#mit-license">MIT License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -199,7 +201,7 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 <!-- LICENSE -->
 ## License
 
-<p>To be updated.</p>
+<p>The VERSE Equity Toolkit is licensed under the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/LICENSE">MIT License</a></p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
