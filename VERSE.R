@@ -1,6 +1,6 @@
 ######################################################
 # Vaccine Economics Research for Sustainability and Equity (VERSE)
-# VERSE Equity Tool
+# VERSE Equity Toolkit
 ######################################################
 rm(list=ls()) # clear
 
@@ -17,13 +17,13 @@ setwd("C:/Users/gdebrouc/Dropbox/VERSE-all/VERSE DHS Outputs")
 ##### VERSE Equity Tool Inputs #####
 
 # ACTION NEEDED: Choose the country and DHS year based on the country list: https://dhsprogram.com/Countries/
-COUNTRY <- "Uganda"
-YEAR <- 2016
+COUNTRY <- "Rwanda"
+YEAR <- 2019
 
 
 # ACTION NEEDED: Leave default vaccines or add/remove vaccines based on the list below:
 # List of vaccines: BCG, DTP1, DTP2, DTP3, OPV1, OPV2, OPV3, MCV1, MCV2, PolioBD, HEPBBD, HEPB1, HEPB2, HEPB3, PENTA1, PENTA2, PENTA3, PCV1, PCV2, PCV3, ROTA1, ROTA2, ROTA3, HIB1, HIB2, HIB3, IPV1, IPV2, IPV3, FULL, ZERO, COMPLETE
-VACCINES <- c("BCG","DTP1","DTP2","DTP3","OPV1","OPV2","OPV3","ZERO","FULL","COMPLETE")
+VACCINES <- c("BCG","DTP1","DTP2","DTP3","OPV1","OPV2","OPV3","MCV1","ZERO","FULL","COMPLETE")
 
 
 # ACTION NEEDED: Change whether you want maps to be generated ("YES" --> more processing time)
@@ -100,13 +100,11 @@ set_rdhs_config(email = "ewatts13@jhu.edu",
                 global = TRUE)
 1
 
-
-# ACTION NEEDED: When prompted, enter password: verseteam
-
+# Enter password: verseteam
 
 
+# Begin VERSE Function
 
-##### VERSE Function #####
 VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) { 
   
   #Mute unnecessary warnings
@@ -269,8 +267,8 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   
   # Create Vaccine Schedule from WHO General EPI Guidance
   if (SCHEDULE[1]=="DEFAULT"){
-    schedule<-as.data.frame(matrix(as.numeric(c(0,      2,     3,     4,    2,      3,     4,    12,    24,      0,        2,    3,     4,     2,     3,     4,      2,      3,      4,     0,        2,     3,      4,      5,   108,   6,    7,    6,     24,         24,        24,      18,    12,    12,      2,        3,       4,       12,     0,      24)),nrow=1))
-    schedule_names<-                          c("BCG","DTP1","DTP2","DTP3","OPV1","OPV2","OPV3","MCV1","MCV2","PolioBD","HIB1","HIB2","HIB3","PCV1","PCV2","PCV3","ROTA1","ROTA2","ROTA3","HEPBBD","HEPB1","HEPB2","HEPB3","HEPB4","HPV","JE1","JE2","TCV","CHOLERA1","CHOLERA2","CHOLERA3","MENA","MENC","HEPA","PENTA1","PENTA2","PENTA3", "ZERO", "FULL", "COMPLETE")
+    schedule<-as.data.frame(matrix(as.numeric(c(0,      2,     3,     4,      2,       3,       4,      2,     3,     4,      2,     3,    4,     12,    24,      0,        2,    3,     4,     2,     3,     4,      2,      3,      4,     0,        2,     3,      4,      5,   108,   6,    7,    6,     24,         24,        24,      18,    12,    12,      2,        3,       4,       12,     0,      24)),nrow=1))
+    schedule_names<-                          c("BCG","DTP1","DTP2","DTP3","POLIO1","POLIO2","POLIO3","OPV1","OPV2","OPV3","IPV1","IPV2","IPV3","MCV1","MCV2","PolioBD","HIB1","HIB2","HIB3","PCV1","PCV2","PCV3","ROTA1","ROTA2","ROTA3","HEPBBD","HEPB1","HEPB2","HEPB3","HEPB4","HPV","JE1","JE2","TCV","CHOLERA1","CHOLERA2","CHOLERA3","MENA","MENC","HEPA","PENTA1","PENTA2","PENTA3", "ZERO", "FULL", "COMPLETE")
     colnames(schedule) <- schedule_names
   } else {
     # Create Schedule from input Vector (must align with VACCINES() input vector and be age in months)
@@ -331,6 +329,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data <- dhs_data %>% mutate("DTP1" = ifelse(dhs_data$h3 ==0 | dhs_data$h3 >=8, 0,
                                                     ifelse(dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3, 1,
                                                            "NA")))}
+  
+  # POLIO1 (1 = received, 0 = did not recive, NA = no data)
+  if ("POLIO1" %in% VACCINES){
+    dhs_data <- dhs_data %>% mutate("POLIO1" = ifelse(((dhs_data$h4 ==0 | dhs_data$h4 >=8) & (dhs_data$IPVind ==0))|((dhs_data$h4 ==0 | dhs_data$h4 >=8) & (dhs_data$IPVind ==1)), 0,
+                                                      ifelse((dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & ((dhs_data$IPVind ==0)| (dhs_data$IPVind ==1)), 1,
+                                                             "NA")))}
+  
   # OPV1 (1 = received, 0 = did not recive, NA = no data)
   if ("OPV1" %in% VACCINES){
     dhs_data <- dhs_data %>% mutate("OPV1" = ifelse((dhs_data$h4 ==0 | dhs_data$h4 >=8) & (dhs_data$IPVind ==0), 0,
@@ -344,6 +349,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data <- dhs_data %>% mutate("DTP2" = ifelse(dhs_data$h5 ==0 | dhs_data$h5 >=8, 0,
                                                     ifelse(dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3, 1,
                                                            "NA")))}
+  
+  # POLIO2 (1 = received, 0 = did not recive, NA = no data)
+  if ("POLIO2" %in% VACCINES){
+    dhs_data <- dhs_data %>% mutate("POLIO2" = ifelse(((dhs_data$h6 ==0 | dhs_data$h6 >=8) & (dhs_data$IPVind ==0))|((dhs_data$h6 ==0 | dhs_data$h6 >=8) & (dhs_data$IPVind ==1)), 0,
+                                                      ifelse((dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & ((dhs_data$IPVind ==0)| (dhs_data$IPVind ==1)), 1,
+                                                             "NA")))}
+  
   # OPV2 (1 = received, 0 = did not recive, NA = no data)
   if ("OPV2" %in% VACCINES){
     dhs_data <- dhs_data %>% mutate("OPV2" = ifelse((dhs_data$h6 ==0 | dhs_data$h6 >=8) & (dhs_data$IPVind ==0), 0,
@@ -357,6 +369,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data <- dhs_data %>% mutate("DTP3" = ifelse(dhs_data$h7 ==0 | dhs_data$h7 >=8, 0,
                                                     ifelse(dhs_data$h7 ==1 | dhs_data$h7 ==2 | dhs_data$h7 ==3, 1,
                                                            "NA")))}
+  
+  # POLIO3 (1 = received, 0 = did not recive, NA = no data)
+  if ("POLIO3" %in% VACCINES){
+    dhs_data <- dhs_data %>% mutate("POLIO3" = ifelse(((dhs_data$h8 ==0 | dhs_data$h8 >=8) & (dhs_data$IPVind ==0))|((dhs_data$h8 ==0 | dhs_data$h8 >=8) & (dhs_data$IPVind ==1)), 0,
+                                                      ifelse((dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3) & ((dhs_data$IPVind ==0)| (dhs_data$IPVind ==1)), 1,
+                                                             "NA")))}
+  
   # OPV3 (1 = received, 0 = did not recive, NA = no data)
   if ("OPV3" %in% VACCINES){
     dhs_data <- dhs_data %>% mutate("OPV3" = ifelse((dhs_data$h8 ==0 | dhs_data$h8 >=8) & (dhs_data$IPVind ==0), 0,
@@ -475,36 +494,97 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   
   # Indicator for Fully Immunized for Age (1 = Fully Immuniized, 0 = Not Fully Immunized, NA = no data)
   # At a minimum Fully Immunized utilizes data on BCG, MCV1, Polio1-3, DTP1-3 (and Penta1-3, depending on location)
-  if ("FULL" %in% VACCINES){ 
-    if(("BCG" %in% VACCINES) & (("DTP1" %in% VACCINES)|("PENTA1" %in% VACCINES)) & (("DTP2" %in% VACCINES)|("PENTA2" %in% VACCINES)) & (("DTP3" %in% VACCINES)|("PENTA3" %in% VACCINES)) & (("OPV1" %in% VACCINES)|("IPV1" %in% VACCINES)|("PENTA1" %in% VACCINES)) & (("OPV2" %in% VACCINES)|("IPV2" %in% VACCINES)|("PENTA2" %in% VACCINES)) & (("OPV3" %in% VACCINES)|("IPV3" %in% VACCINES)|("PENTA3" %in% VACCINES)) & ("MCV1" %in% VACCINES)){
-      
-      # Create VACCINES input, minus FULL, ZERO, and COMPLETE
-      VAX_TOTAL = VACCINES[VACCINES != "FULL"]
-      VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="ZERO"]
-      VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="COMPLETE"]
-      for (i in VAX_TOTAL){
-        FI <- paste("FI_",i, sep="")
-        dhs_data[,FI] = ifelse(((dhs_data[,i]==0)&(dhs_data$hw1 < schedule[,i][1]))|((dhs_data[,i]==1)&(dhs_data$hw1 >= schedule[,i][1])),1,0)
+  # Remove MCV1 & MCV2 from FULL for countries where an ongoing campaign is concurrent with DHS data collection. 
+  
+  if ("FULL" %in% VACCINES){
+    if ((COUNTRY=="Afghanistan")
+        |(COUNTRY=="Angola")
+        |(COUNTRY=="Benin")
+        |(COUNTRY=="Cambodia")
+        |(COUNTRY=="Chad")
+        |(COUNTRY=="Cote d’Ivoire")
+        |(COUNTRY=="Eritrea")
+        |(COUNTRY=="Ethiopia")
+        |(COUNTRY=="Ghana")
+        |(COUNTRY=="Guinea")
+        |(COUNTRY=="Indonesia")
+        |(COUNTRY=="Lesotho")
+        |(COUNTRY=="Liberia")
+        |(COUNTRY=="Madagascar")
+        |(COUNTRY=="Malawi")
+        |(COUNTRY=="Mali")
+        |(COUNTRY=="Niger")
+        |(COUNTRY=="Nigeria")
+        |(COUNTRY=="Pakistan")
+        |(COUNTRY=="Rwanda")
+        |(COUNTRY=="Senegal")
+        |(COUNTRY=="Sierra Leone")
+        |(COUNTRY=="Tanzania")
+        |(COUNTRY=="Togo")
+        |(COUNTRY=="Timor-Leste")){
+      if(("BCG" %in% VACCINES) & (("DTP1" %in% VACCINES)|("PENTA1" %in% VACCINES)) & (("DTP2" %in% VACCINES)|("PENTA2" %in% VACCINES)) & (("DTP3" %in% VACCINES)|("PENTA3" %in% VACCINES)) & (("OPV1" %in% VACCINES)|("IPV1" %in% VACCINES)|("PENTA1" %in% VACCINES)|("POLIO1" %in% VACCINES)) & (("OPV2" %in% VACCINES)|("IPV2" %in% VACCINES)|("PENTA2" %in% VACCINES)|("POLIO2" %in% VACCINES)) & (("OPV3" %in% VACCINES)|("IPV3" %in% VACCINES)|("PENTA3" %in% VACCINES)|("POLIO3" %in% VACCINES))){
+        
+        # Create VACCINES input, minus FULL, ZERO, and COMPLETE
+        VAX_TOTAL = VACCINES[VACCINES != "FULL"]
+        VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="ZERO"]
+        VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="COMPLETE"]
+        VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="MCV1"]
+        VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="MCV2"]
+        for (i in VAX_TOTAL){
+          FI <- paste("FI_",i, sep="")
+          dhs_data[,FI] = ifelse(((dhs_data[,i]==0)&(dhs_data$hw1 < schedule[,i][1]))|((dhs_data[,i]==1)&(dhs_data$hw1 >= schedule[,i][1])),1,0)
+        }
+        
+        # Create small dataset with only the vaccine-specific immunized for age inicators produced above
+        newdata<- dhs_data %>% 
+          select(starts_with("FI_"))
+        
+        # Sum the binary indicator for appropriately immunized for age for each across observations
+        dhs_data <- dhs_data %>% mutate("FULL_SUM" = rowSums(newdata))
+        
+        # Create fully immunized variable as the sum being equal to length of VACCINES input, minus FULL, ZERO, and COMPLETE (e.g. received all)
+        dhs_data <- dhs_data %>% mutate("FULL" = ifelse((dhs_data[,"FULL_SUM"]==length(VAX_TOTAL)),1,0))
+        
+        # If only a few select vaccines are specified in VACCINES, pull data on other routine vaccines (BCG, DTP1-3, Polio1-3) to create FULL variable
+      } else {
+        dhs_data <- dhs_data %>% mutate("FULL" = ifelse((((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$hw1 < schedule[,"DTP1"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$hw1 >= schedule[,"DTP1"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$hw1 >= schedule[,"DTP2"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$h7 ==1 | dhs_data$h7 ==2 | dhs_data$h7 ==3) & (dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3) & (dhs_data$hw1 >= schedule[,"DTP3"][1]))
+                                                         
+        ), 1, 0))
       }
-      
-      # Create small dataset with only the vaccine-specific immunized for age inicators produced above
-      newdata<- dhs_data %>% 
-        select(starts_with("FI_"))
-      
-      # Sum the binary indicator for appropriately immunized for age for each across observations
-      dhs_data <- dhs_data %>% mutate("FULL_SUM" = rowSums(newdata))
-      
-      # Create fully immunized variable as the sum being equal to length of VACCINES input, minus FULL, ZERO, and COMPLETE (e.g. received all)
-      dhs_data <- dhs_data %>% mutate("FULL" = ifelse((dhs_data[,"FULL_SUM"]==length(VAX_TOTAL)),1,0))
-      
-      # If only a few select vaccines are specified in VACCINES, pull data on other routine vaccines (BCG, DTP1-3, Polio1-3, MCV1) to create FULL variable
     } else {
-      dhs_data <- dhs_data %>% mutate("FULL" = ifelse((((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$hw1 < schedule[,"DTP1"][1]))|
-                                                         ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$hw1 >= schedule[,"DTP1"][1]))|
-                                                         ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$hw1 >= schedule[,"DTP2"][1]))|
-                                                         ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$h7 ==1 | dhs_data$h7 ==2 | dhs_data$h7 ==3) & (dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3) & (dhs_data$hw1 >= schedule[,"DTP3"][1]))|
-                                                         ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$h7 ==1 | dhs_data$h7 ==2 | dhs_data$h7 ==3) & (dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3) & (dhs_data$h9 ==1 | dhs_data$h9 ==2 | dhs_data$h9 ==3) & (dhs_data$hw1 >= schedule[,"MCV1"][1]))
-      ), 1, 0))
+      if(("BCG" %in% VACCINES) & (("DTP1" %in% VACCINES)|("PENTA1" %in% VACCINES)) & (("DTP2" %in% VACCINES)|("PENTA2" %in% VACCINES)) & (("DTP3" %in% VACCINES)|("PENTA3" %in% VACCINES)) & (("OPV1" %in% VACCINES)|("IPV1" %in% VACCINES)|("PENTA1" %in% VACCINES)|("POLIO1" %in% VACCINES)) & (("OPV2" %in% VACCINES)|("IPV2" %in% VACCINES)|("PENTA2" %in% VACCINES)|("POLIO2" %in% VACCINES)) & (("OPV3" %in% VACCINES)|("IPV3" %in% VACCINES)|("PENTA3" %in% VACCINES)|("POLIO3" %in% VACCINES)) & ("MCV1" %in% VACCINES)){
+        
+        # Create VACCINES input, minus FULL, ZERO, and COMPLETE
+        VAX_TOTAL = VACCINES[VACCINES != "FULL"]
+        VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="ZERO"]
+        VAX_TOTAL = VAX_TOTAL[VAX_TOTAL !="COMPLETE"]
+        for (i in VAX_TOTAL){
+          FI <- paste("FI_",i, sep="")
+          dhs_data[,FI] = ifelse(((dhs_data[,i]==0)&(dhs_data$hw1 < schedule[,i][1]))|((dhs_data[,i]==1)&(dhs_data$hw1 >= schedule[,i][1])),1,0)
+        }
+        
+        # Create small dataset with only the vaccine-specific immunized for age inicators produced above
+        newdata<- dhs_data %>% 
+          select(starts_with("FI_"))
+        
+        # Sum the binary indicator for appropriately immunized for age for each across observations
+        dhs_data <- dhs_data %>% mutate("FULL_SUM" = rowSums(newdata))
+        
+        # Create fully immunized variable as the sum being equal to length of VACCINES input, minus FULL, ZERO, and COMPLETE (e.g. received all)
+        dhs_data <- dhs_data %>% mutate("FULL" = ifelse((dhs_data[,"FULL_SUM"]==length(VAX_TOTAL)),1,0))
+        
+        # If only a few select vaccines are specified in VACCINES, pull data on other routine vaccines (BCG, DTP1-3, Polio1-3, MCV1) to create FULL variable
+      } else {
+        dhs_data <- dhs_data %>% mutate("FULL" = ifelse((((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$hw1 < schedule[,"DTP1"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$hw1 >= schedule[,"DTP1"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$hw1 >= schedule[,"DTP2"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$h7 ==1 | dhs_data$h7 ==2 | dhs_data$h7 ==3) & (dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3) & (dhs_data$hw1 >= schedule[,"DTP3"][1]))|
+                                                           ((dhs_data$h2 ==1 | dhs_data$h2 ==2 | dhs_data$h2 ==3) & (dhs_data$h3 ==1 | dhs_data$h3 ==2 | dhs_data$h3 ==3) & (dhs_data$h4 ==1 | dhs_data$h4 ==2 | dhs_data$h4 ==3) & (dhs_data$h5 ==1 | dhs_data$h5 ==2 | dhs_data$h5 ==3) & (dhs_data$h6 ==1 | dhs_data$h6 ==2 | dhs_data$h6 ==3) & (dhs_data$h7 ==1 | dhs_data$h7 ==2 | dhs_data$h7 ==3) & (dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3) & (dhs_data$h9 ==1 | dhs_data$h9 ==2 | dhs_data$h9 ==3) & (dhs_data$hw1 >= schedule[,"MCV1"][1]))
+        ), 1, 0))
+      }
     }
   }
   
@@ -589,6 +669,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   if(COUNTRY[1]=="Yemen"){
     dhs_data$GEO<-dhs_data$v101
     dhs_data$v101 <- dhs_data$v101-10
+  }
+  
+  if((COUNTRY[1]=="India") & (YEAR<=2007)){
+    dhs_data$GEO<-dhs_data$v101
+    dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=5 & dhs_data$v101<=24, dhs_data$v101-1,
+                                                    ifelse(dhs_data$v101>=25 & dhs_data$v101<=30, dhs_data$v101-3,
+                                                           ifelse(dhs_data$v101>30, dhs_data$v101-5,dhs_data$v101))))
   }
   
   if(min(dhs_data$v101)==0){
@@ -690,11 +777,14 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                     if(COUNTRY[1]=="Yemen"){
                       GEO_CI<- c(val_labels(dhs_data$GEO))
                     } else {
-                      if(FLAG[1]==1){
+                      if((COUNTRY[1]=="India") & (YEAR<=2007)){
                         GEO_CI<- c(val_labels(dhs_data$GEO))
                       } else {
-                        GEO_CI<- c(val_labels(dhs_data$v101))
-                      }}}}}}}}}}}
+                        if(FLAG[1]==1){
+                          GEO_CI<- c(val_labels(dhs_data$GEO))
+                        } else {
+                          GEO_CI<- c(val_labels(dhs_data$v101))
+                        }}}}}}}}}}}}
   
   #Store Geographic Sub-unit Names
   GEO_CI<- names(GEO_CI)
@@ -1185,7 +1275,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       guides(fill = guide_legend(byrow = TRUE)) + # Required to add spacing in Legend (with legend.spacing.y)
       coord_polar(theta="y") +
       xlim(c(2, 4.25)) + #Turns the Pie into a Donut Chart
-      scale_fill_manual(values=c("#74add1","grey80","#d73027", "#f46d43", "#fdae61","#fee090","#e0f3f8","#4575b4","#4575b4"),
+      scale_fill_manual(values=c("#E0F3F8","#4575b4","#74add1","#d73027", "#f46d43", "#fdae61","#fee090","grey80"),
                         breaks=c("underage_i","v101", "v025", "v106", "v190", "b4", "v481","Residual"),
                         labels=c(paste(paste("Underage:",round(decomposition_pie$percent_t[1],1), sep=" "),"%", sep=""),
                                  paste(paste(paste(GEO,":",sep=""),round(decomposition_pie$percent_t[2],1), sep=" "),"%", sep=""),
@@ -1195,7 +1285,6 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                  paste(paste("Sex of Child:",round(decomposition_pie$percent_t[6],1), sep=" "),"%", sep=""),
                                  paste(paste("Covered by Health Insurance:",round(decomposition_pie$percent_t[7],2), sep=" "),"%", sep=""),
                                  paste(paste("Unexplained Variation:",round(decomposition_pie$percent_t[8],1), sep=" "),"%", sep="")))
-    
     
     #Save Pie Chart to Output
     output_list[[paste("pie_",i, sep="")]] <- assign(paste("pie_",i, sep=""),pie_i)
@@ -1506,15 +1595,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                           GEO_NAMES <- names(GEO_UNIT)
                           GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                         } else  {
-                          if (FLAG[1]==1){
+                          if ((COUNTRY=="India") & (YEAR<=2007)){
                             GEO_UNIT <- c(val_labels(dhs_data$GEO))
                             GEO_NAMES <- names(GEO_UNIT)
                             GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                           } else {
-                            GEO_UNIT <- c(val_labels(dhs_data$v101))
-                            GEO_NAMES <- names(GEO_UNIT)
-                            GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
-                          }}}}}}}}}}}}
+                            if (FLAG[1]==1){
+                              GEO_UNIT <- c(val_labels(dhs_data$GEO))
+                              GEO_NAMES <- names(GEO_UNIT)
+                              GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                            } else {
+                              GEO_UNIT <- c(val_labels(dhs_data$v101))
+                              GEO_NAMES <- names(GEO_UNIT)
+                              GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                            }}}}}}}}}}}}}
     
     if (COUNTRY=="Egypt"){
       efficiency <- cbind.data.frame(CI_Results_GEO[-c(2,5)], GEO_UNIT[-c(2,5)], GEO_NAMES[-c(2,5)], GEO_LABEL[-c(2,5)], efficiency_data)
@@ -1823,13 +1917,13 @@ for (i in VACCINES) {
   dev.off()
 }
 
-# Exporting the equity-coverage plane zoomed in (but cannot use the legend) into the working directory
-for (i in VACCINES) {
-  X <- paste("efficiency_",i, sep="")
-  jpeg(filename = paste0(COUNTRY, "_", YEAR, "_EffEquPlane_", i, "_DONOTUSELEGEND.jpg"), width = 300, height = 300, quality = 100)
-  print(results[X])
-  dev.off()
-}
+# Exporting the equity-coverage plane zoomed in (but cannot use the legend) into the working directory - CURRENTLY INACTIVE
+#for (i in VACCINES) {
+#  X <- paste("efficiency_",i, sep="")
+#  jpeg(filename = paste0(COUNTRY, "_", YEAR, "_EffEquPlane_", i, "_DONOTUSELEGEND.jpg"), width = 300, height = 300, quality = 100)
+#  print(results[X])
+#  dev.off()
+#}
 
 
 # Generate CSV files with indicator values at the National level

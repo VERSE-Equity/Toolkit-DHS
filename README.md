@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://immunizationeconomics.org/verse-home">
     <img src="https://images.squarespace-cdn.com/content/v1/556deb8ee4b08a534b8360e7/1605302852735-UUOFORQ4RFJ3LOEKMO8K/verse22.png?format=750w" alt="Logo" width="750" height="236">
   </a>
 
@@ -12,18 +12,16 @@
   <p align="center">
     Set up, use, and interpret the results of the VERSE Equity Tool
     <br />
-    <a href="https://github.com/VERSE-Equity/VERSE-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>Open the User Guide »</strong></a>
+    <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>Open the User Guide »</strong></a>
     <br />
     <br />
     <a href="https://immunizationeconomics.org/verse-home">Learn about the project</a>
     ·
-    View Demo
+    <a href="https://jh.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6a5667b4-6ca2-4e47-9ff6-ade4010b2a84">View Demo</a>
     ·
-    <a href="mailto:bpatenaude@jhu.edu">Report Bug</a>
+    <a href="https://github.com/VERSE-Equity/Toolkit-DHS/issues">Report Bug</a>
     ·
-    <a href="mailto:bpatenaude@jhu.edu">Request Feature</a>
-    ·
-    <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/LICENSE">Read the license</a>
+    <a href="https://github.com/VERSE-Equity/Toolkit-DHS/issues">Request Feature</a>
   </p>
 </div>
 
@@ -49,7 +47,8 @@
         <li><a href="#available-vaccines">Available vaccines</a></li>
       </ul>
     </li>
-    <li><a href="#mit-license">MIT License</a></li>
+    <li><a href="#troubleshoot">Troubleshoot</a></li>
+    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -76,8 +75,8 @@
 
 
 
-### About the VERSE-DHS Repository
-<p>This repository contains the most up-to-date generic VERSE Equity Tool for DHS data analysis. It should only be used as a <strong>reference</strong> and should not be altered in any way.</p>
+### About the Toolkit-DHS Repository
+<p>This repository contains the most up-to-date generic VERSE Equity Tool for DHS data analysis. It can be used, edited, and shared with proper credit, following the <a href="#license">MIT license</a>.</p>
 <p>Customizable versions of the VERSE Equity Tool exist in other repositories. Please contact Mr. Gatien de Broucker to access or set up a separate repository: <a href="mailto:gdebroucker@jhu.edu">gdebroucker@jhu.edu</a></p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -161,6 +160,58 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
+## Use
+
+### VERSE metrics
+
+<p>The VERSE Equity Toolkit generates the following metrics:</p>
+<ul>
+<li><strong>Coverage ("efficiency") metric</strong>: <i>Coverage</i></li>
+<li><strong>Equity metrics:</strong>
+<ul style="list-style-type:circle">
+  <li>Wagstaff concentration index (composite ranking): <i>CI</i></li>
+  <li>Wagstaff concentration index (wealth ranking)<sup>A</sup>: <i>CI_Wealth</i></li>
+  <li>Erreyger concentration index (composite ranking): <i>CI_E</i></li>
+  <li>Erreyger concentration index (wealth ranking)<sup>A</sup>: <i>CI_E_Wealth</i></li>
+  <li>Absolute Equity Gap: <i>AEG</i></li>
+  <li>Relative Equity Gap: <i>REG</i></li>
+  <li>Slope Index of Inequity: <i>SII</i></li>
+  <li>Relative Index of Inequity: <i>RII</i></li>
+</ul>
+</li>
+</ul>
+
+<p><strong>Notes:</strong></p>
+
+<p><sup>A.</sup> The common concentration index based on socioeconomic status ("wealth") only is also generated.</p>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### Calling the results
+
+<p>After successfully running the toolkit, the coverage and equity metrics can be called using the following code:</p>
+   ```r
+   results$[ENTER DESIRED METRIC AND SPECIFICATION HERE]
+   ```
+<p>The code for the metrics are presented in the <a href="#verse-metrics">list above</a> (in <i>italics</i>). The codes for the specifications (national or subnational level, vaccine, and factor of inequity) are detailed in the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>VERSE Equity Toolkit User Guide</strong></a>.</p>
+
+<p>Examples:</p>
+   ```r
+   # National estimates for the Wagstaff concentration index (composite ranking) by vaccine
+   results$CI_Results
+   
+   # Subnational estimates for the Wagstaff concentration index (composite ranking) for a specific vaccine by region
+   results$CI_GEO_MCV1
+   ```
+
+<p>Consult the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf">VERSE Equity Toolkit User Guide</a> for more details.</p>
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
 ### Available vaccines
 
 | Vaccine                       | Code (birth dose) | Code (dose 1) | Code (dose 2) | Code (dose 3) |
@@ -190,9 +241,57 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 
 <p><strong>Notes:</strong></p>
 
-<sup>A.</sup> Only include MCV1 and MCV2 if no supplemental immunization activity (or vaccine campaign) for measles took place in the two years preceding the analyzed DHS survey.
+<p><sup>A.</sup> Only include MCV1 and MCV2 if no supplemental immunization activity (or vaccine campaign) for measles took place in the two years preceding the analyzed DHS survey.
 
-<sup>B.</sup> These vaccines and health outcomes <strong>must be included</strong> in the `VACCINES()` input.
+<sup>B.</sup> These vaccines and health outcomes <strong>must be included</strong> in the `VACCINES()` input.</p>
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+## Troubleshoot
+
+### Error in download.file
+
+<p>We are aware of a common issue where the program stops running and you receive the following error message in the R Console:</p>
+   ```r
+Error in download.file(url, tf2, quiet = quiet_download) :   cannot open URL 'https://gis.dhsprogram.com/arcgis/rest/directories/arcgisjobs/tools/downloadsubnationaldata_gpserver/j3d3334c368334492902fa8a86a81666e/scratch/sdr_subnational_boundaries_2022-02-11.zip'
+   ```
+
+<p>To resolve it, run the following code <strong>directly in your R Console</strong> and re-execute the VERSE Equity Toolkit:</p>
+   ```r
+   get_available_datasets(clear_cache=TRUE)
+   ```
+
+<p>This procedure will clear your cache and allow you to download another DHS dataset.</p>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### Other errors when running the program
+
+<p>Most errors can be resolved by restarting R-Studio and ensuring that all necessary packages are installed. The VERSE Equity Toolkit requires the latest version of R and R-Studio to be installed, as well as several R packages <a href="#installation">listed above</a>.</p>
+
+<p>If this does not resolve the error, you can report it on the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/issues">dedicated GitHub page</a>. While the toolkit is designed to accommodate many deviations in the DHS data coding, it may be missing recent updates to the data.</p>
+
+<p>Finally, the VERSE Equity Toolkit does not currently run (or requires additional inputs) for the following countries:</p>
+
+| Country (year)  | Reason                            | Resolution                    |
+|-----------------|-----------------------------------|-------------------------------|
+| Any country prior to 2010 | VERSE Equity Toolkit not yet tested on pre-2010 data | We may update the tool to include these data (let us know if you are interested in using specific pre-2010 surveys) |
+| Equatorial Guinea (2011) | DHS dataset is not available to the public | None |
+| Sri Lanka (2016) | DHS dataset is not available to the public | None |
+| Yemen (2013) | There are no map-shape files for Yemen, and there is no data on maternal education (the level will appear as 0% in the pie charts) | Set MAP = "NO" |
+| Colombia (2015) | Colombia did not collect any immunization data in the 2015 DHS | None |
+| Peru (2014) | DHS dataset is not available to the public | 2012 DHS dataset is available for Peru |
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+### Any other issues with the outputs or program
+
+<p>Report issues with the outputs or the program on the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/issues">dedicated GitHub page</a>. Others may have encountered the same issue and any resolution will be posted there.</p>
+
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -201,7 +300,11 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 <!-- LICENSE -->
 ## License
 
-<p>The VERSE Equity Toolkit is licensed under the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/LICENSE">MIT License</a></p>
+<p>The VERSE Equity Toolkit operates under the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/LICENSE">MIT License</a>.</p>
+
+<p>The license allows for many types of use of the VERSE Equity Toolkit. To provide credit, we recommend using the following reference:</p>
+
+<p>Patenaude, B., Odihi, D., Sriudomporn, S., Mak, J., Watts, E., & de Broucker, G. (2022). A standardized approach for measuring multivariate equity in vaccination coverage, cost-of-illness, and health outcomes: Evidence from the Vaccine Economics Research for Sustainability & Equity (VERSE) project. <i>Social Science & Medicine, 302</i>, 114979. doi:<a href="https://doi.org/10.1016/j.socscimed.2022.114979">https://doi.org/10.1016/j.socscimed.2022.114979</a></p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -210,9 +313,14 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 <!-- CONTACT -->
 ## Contact
 
-Dr. Bryan Patenaude (he/him) - <a href="mailto:bpatenaude@jhu.edu">bpatenaude@jhu.edu</a>
+<ul>
+<li><strong>Dr. Bryan Patenaude</strong> (he/him) at <a href="mailto:bpatenaude@jhu.edu">bpatenaude@jhu.edu</a> to discuss applications of the VERSE Equity Toolkit on primary healthcare outcomes or other health outcomes, or on alternative data sources.</li>
+<li><strong>Mr. Gatien de Broucker</strong> at <a href="mailto:gdebroucker@jhu.edu">gdebroucker@jhu.edu</a> to learn about learning opportunities and VERSE-related courses</li>
+</ul>
 
-Project Link: [https://immunizationeconomics.org/verse-home](https://immunizationeconomics.org/verse-home)
+<p>Learn more about the VERSE project: <a href="https://immunizationeconomics.org/verse-home">ImmunizationEconomics.Org/verse-home</a></p>
+
+<p>Read the news release about the VERSE Equity Toolkit: <a href="https://immunizationeconomics.org/recent-activity/2022/4/27/measuring-equity-in-vaccination-coverage-beyond-socioeconomic-status-launch-of-the-verse-equity-toolkit">Measuring equity in vaccination coverage beyond socioeconomic status: Launch of the VERSE Equity Toolkit</a> (27 April 2022)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
