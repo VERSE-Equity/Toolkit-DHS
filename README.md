@@ -190,13 +190,14 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 
 ### Calling the results
 
-<p>After successfully running the toolkit, the coverage and equity metrics can be called using the following code:</p>
+After successfully running the toolkit, the coverage and equity metrics can be called using the following code:
    ```r
    results$[ENTER DESIRED METRIC AND SPECIFICATION HERE]
    ```
-<p>The code for the metrics are presented in the <a href="#verse-metrics">list above</a> (in <i>italics</i>). The codes for the specifications (national or subnational level, vaccine, and factor of inequity) are detailed in the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>VERSE Equity Toolkit User Guide</strong></a>.</p>
 
-<p>Examples:</p>
+The code for the metrics are presented in the <a href="#verse-metrics">list above</a> (in <i>italics</i>). The codes for the specifications (national or subnational level, vaccine, and factor of inequity) are detailed in the <a href="https://github.com/VERSE-Equity/VERSE-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>VERSE Equity Toolkit User Guide</strong></a>.
+
+Examples:
    ```r
    # National estimates for the Wagstaff concentration index (composite ranking) by vaccine
    results$CI_Results
@@ -205,7 +206,7 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
    results$CI_GEO_MCV1
    ```
 
-<p>Consult the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf">VERSE Equity Toolkit User Guide</a> for more details.</p>
+<p>Consult the <a href="https://github.com/VERSE-Equity/VERSE-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf">VERSE Equity Toolkit User Guide</a> for more details.</p>
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -253,12 +254,12 @@ You can also search for `ACTION NEEDED` in <i>VERSE.R</i> to review where these 
 
 ### Error in download.file
 
-<p>We are aware of a common issue where the program stops running and you receive the following error message in the R Console:</p>
+We are aware of a common issue where the program stops running and you receive the following error message in the R Console:
    ```r
-Error in download.file(url, tf2, quiet = quiet_download) :   cannot open URL 'https://gis.dhsprogram.com/arcgis/rest/directories/arcgisjobs/tools/downloadsubnationaldata_gpserver/j3d3334c368334492902fa8a86a81666e/scratch/sdr_subnational_boundaries_2022-02-11.zip'
+   Error in download.file(url, tf2, quiet = quiet_download) : cannot open URL 'https://gis.dhsprogram.com/arcgis/rest/directories/arcgisjobs/tools/downloadsubnationaldata_gpserver/j3d3334c368334492902fa8a86a81666e/scratch/sdr_subnational_boundaries_2022-02-11.zip'
    ```
 
-<p>To resolve it, run the following code <strong>directly in your R Console</strong> and re-execute the VERSE Equity Toolkit:</p>
+To resolve it, run the following code <strong>directly in your R Console</strong> and re-execute the VERSE Equity Toolkit:
    ```r
    get_available_datasets(clear_cache=TRUE)
    ```
