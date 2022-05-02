@@ -219,10 +219,11 @@ Examples:
 |-------------------------------|-------------------|---------------|---------------|---------------|
 | Bacillus Calmette–Guérin |  | BCG |  |  |
 | Diphtheria-Tetanus-Pertussis |  | DTP1 | DTP2 | DTP3 |
-| Oral or Inactivated Polio | PolioBD | OPV1 | OPV2 | OPV3 |
+| Polio (any) | PolioBD | POLIO1<sup> A</sup> | POLIO2<sup> A</sup> | POLIO3<sup> A</sup> |
+| Oral Polio only |  | OPV1 | OPV2 | OPV3 |
 | Inactivated Polio only |  | IPV1 | IPV2 | IPV3 |
 | Pentavalent |  | Penta1 | Penta2 | Penta3 |
-| Measles |  | MCV1<sup> A</sup> | MCV2<sup> A</sup> |  |
+| Measles |  | MCV1<sup> B</sup> | MCV2<sup> B</sup> |  |
 | Pneumococcal conjugate |  | PCV1 | PCV2 | PCV3 |
 | Rotavirus |  | ROTA1 | ROTA2 | ROTA3 |
 | Hepatitis B | HEPBBD | HEPB1 | HEPB2 | HEPB3 |
@@ -236,15 +237,17 @@ Examples:
 | Health outcome                         | Code     | Description                                                   |
 |----------------------------------------|----------|---------------------------------------------------------------|
 | Zero-dose status | ZERO | A child has a <i>zero-dose status</i> if they did not receive either BCG, DTP1, or OPV1 by 12 months of age |
-| Fully-immunized for age status | FULL<sup> B</sup> | A child is considered <i>fully immunized for age</i> if they received all scheduled vaccines for their age (in the model, this applies to BCG, DTP1-3, OPV1-3, and any other specified vaccine) |
+| Fully-immunized for age status | FULL<sup> C</sup> | A child is considered <i>fully immunized for age</i> if they received all scheduled vaccines for their age (in the model, this applies to BCG, DTP1-3, OPV1-3, and any other specified vaccine) |
 | Completed immunization schedule status | COMPLETE | TBD |
 
 
 <p><strong>Notes:</strong></p>
 
-<p><sup>A.</sup> Only include MCV1 and MCV2 if no supplemental immunization activity (or vaccine campaign) for measles took place in the two years preceding the analyzed DHS survey.
+<p><sup>A.</sup> Users should choose to use POLIO1-3 in the `VACCINES()` input unless they are sure that either OPV or IPV is exclusively given in the country of interest.
 
-<sup>B.</sup> These vaccines and health outcomes <strong>must be included</strong> in the `VACCINES()` input.</p>
+<sup>B.</sup> MCV1 and MCV2 are excluded in the calculation if supplemental immunization activity (or vaccine campaign) for measles took place in the two years preceding the analyzed DHS survey.
+
+<sup>C.</sup> These vaccines and health outcomes <strong>must be included</strong> in the `VACCINES()` input.</p>
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -256,7 +259,10 @@ Examples:
 
 We are aware of a common issue where the program stops running and you receive the following error message in the R Console:
    ```r
-   Error in download.file(url, tf2, quiet = quiet_download) : cannot open URL 'https://gis.dhsprogram.com/arcgis/rest/directories/arcgisjobs/tools/downloadsubnationaldata_gpserver/j3d3334c368334492902fa8a86a81666e/scratch/sdr_subnational_boundaries_2022-02-11.zip'
+   Error in download.file(url, tf2, quiet = quiet_download) :
+   cannot open URL 'https://gis.dhsprogram.com/arcgis/rest/directories/arcgisjobs/tools
+   downloadsubnationaldata_gpserver/j3d3334c368334492902fa8a86a81666e/scratch
+   sdr_subnational_boundaries_2022-02-11.zip'
    ```
 
 To resolve it, run the following code <strong>directly in your R Console</strong> and re-execute the VERSE Equity Toolkit:
