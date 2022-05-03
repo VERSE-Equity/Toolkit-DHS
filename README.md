@@ -44,10 +44,24 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#model-setup">Model Setup</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#use">Use</a>
+      <ul>
+        <li><a href="#verse-metrics">VERSE metrics</a></li>
+        <li><a href="#calling-the-results">Calling the results</a></li>
         <li><a href="#available-vaccines">Available vaccines</a></li>
       </ul>
     </li>
-    <li><a href="#troubleshoot">Troubleshoot</a></li>
+    <li>
+      <a href="#troubleshoot">Troubleshoot</a>
+      <ul>
+        <li><a href="#error-in-download.file">Error in download.file</a></li>
+        <li><a href="#other-errors-when-running-the-program">Other errors when running the program</a></li>
+        <li><a href="#any-other-issues-with-the-outputs-or-program">Any other issues with the outputs or program</a></li>
+      </ul>
+    </li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -199,10 +213,15 @@ The code for the metrics are presented in the <a href="#verse-metrics">list abov
 
 Examples:
    ```r
-   # National estimates for the Wagstaff concentration index (composite ranking) by vaccine
+   # National estimates for the Wagstaff concentration index
+   # (composite ranking) by vaccine
+   
    results$CI_Results
    
-   # Subnational estimates for the Wagstaff concentration index (composite ranking) for a specific vaccine by region
+   
+   # Subnational estimates for the Wagstaff concentration index
+   # (composite ranking) for a specific vaccine (here, MCV1) by region
+   
    results$CI_GEO_MCV1
    ```
 
@@ -243,11 +262,11 @@ Examples:
 
 <p><strong>Notes:</strong></p>
 
-<p><sup>A.</sup> Users should choose to use POLIO1-3 in the `VACCINES()` input unless they are sure that either OPV or IPV is exclusively given in the country of interest.
+<sup>A.</sup> Users should choose to use POLIO1-3 in the `VACCINES()` input unless they are sure that either OPV or IPV is exclusively given in the country of interest.
 
 <sup>B.</sup> MCV1 and MCV2 are excluded in the calculation if supplemental immunization activity (or vaccine campaign) for measles took place in the two years preceding the analyzed DHS survey.
 
-<sup>C.</sup> These vaccines and health outcomes <strong>must be included</strong> in the `VACCINES()` input.</p>
+<sup>C.</sup> These vaccines and health outcomes <strong>must be included</strong> in the `VACCINES()` input.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -288,7 +307,7 @@ To resolve it, run the following code <strong>directly in your R Console</strong
 | Any country prior to 2010 | VERSE Equity Toolkit not yet tested on pre-2010 data | We may update the tool to include these data (let us know if you are interested in using specific pre-2010 surveys) |
 | Equatorial Guinea (2011) | DHS dataset is not available to the public | None |
 | Sri Lanka (2016) | DHS dataset is not available to the public | None |
-| Yemen (2013) | There are no map-shape files for Yemen, and there is no data on maternal education (the level will appear as 0% in the pie charts) | Set MAP = "NO" |
+| Yemen (2013) | There are no map-shape files for Yemen, and there is no data on maternal education (the level will appear as 0% in the pie charts) | Set `MAP = "NO"` |
 | Colombia (2015) | Colombia did not collect any immunization data in the 2015 DHS | None |
 | Peru (2014) | DHS dataset is not available to the public | 2012 DHS dataset is available for Peru |
 
