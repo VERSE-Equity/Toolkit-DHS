@@ -17,13 +17,13 @@ setwd("C:/Users/gdebrouc/Dropbox/VERSE-all/VERSE DHS Outputs")
 ##### VERSE Equity Tool Inputs #####
 
 # ACTION NEEDED: Choose the country and DHS year based on the country list: https://dhsprogram.com/Countries/
-COUNTRY <- "Rwanda"
-YEAR <- 2019
+COUNTRY <- "Bangladesh"
+YEAR <- 2017
 
 
 # ACTION NEEDED: Leave default vaccines or add/remove vaccines based on the list below:
 # List of vaccines: BCG, DTP1, DTP2, DTP3, POLIO1, POLIO2, POLIO3, MCV1, MCV2, PolioBD, HEPBBD, HEPB1, HEPB2, HEPB3, PENTA1, PENTA2, PENTA3, PCV1, PCV2, PCV3, ROTA1, ROTA2, ROTA3, HIB1, HIB2, HIB3, OPV1, OPV2, OPV3, IPV1, IPV2, IPV3, FULL, ZERO, COMPLETE
-VACCINES <- c("BCG","DTP1","DTP2","DTP3","POLIO1","POLIO2","POLIO3","PCV1","PCV2","PCV3","MCV1","ZERO","FULL","COMPLETE")
+VACCINES <- c("BCG","DTP1","DTP2","DTP3","POLIO1","POLIO2","POLIO3","MCV1","ZERO","FULL","COMPLETE")
 
 
 # ACTION NEEDED: Change whether you want maps to be generated ("YES" --> more processing time)

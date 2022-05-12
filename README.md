@@ -341,7 +341,7 @@ To resolve it, run the following code <strong>directly in your R Console</strong
 
 <ul>
 <li><strong>Dr. Bryan Patenaude</strong> (he/him) at <a href="mailto:bpatenaude@jhu.edu">bpatenaude@jhu.edu</a> to discuss applications of the VERSE Equity Toolkit on primary healthcare outcomes or other health outcomes, or on alternative data sources.</li>
-<li><strong>Mr. Gatien de Broucker</strong> at <a href="mailto:gdebroucker@jhu.edu">gdebroucker@jhu.edu</a> to learn about learning opportunities and VERSE-related courses</li>
+<li><strong>Mr. Gatien de Broucker</strong> at <a href="mailto:gdebroucker@jhu.edu">gdebroucker@jhu.edu</a> to learn about learning opportunities and VERSE-related courses.</li>
 </ul>
 
 <p>Learn more about the VERSE project: <a href="https://immunizationeconomics.org/verse-home">ImmunizationEconomics.Org/verse-home</a></p>
