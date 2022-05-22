@@ -11,14 +11,14 @@ rm(list=ls()) # clear
 
 
 # ACTION NEEDED: Set Your Working Directory (where the model outputs, i.e. figures and tables, will be saved)
-setwd("C:/Users/gdebrouc/Dropbox/VERSE-all/VERSE DHS Outputs")
+setwd("YOUR DIRECTORY HERE")
 
 
 ##### VERSE Equity Tool Inputs #####
 
 # ACTION NEEDED: Choose the country and DHS year based on the country list: https://dhsprogram.com/Countries/
-COUNTRY <- "Bangladesh"
-YEAR <- 2017
+COUNTRY <- "Uganda"
+YEAR <- 2000
 
 
 # ACTION NEEDED: Leave default vaccines or add/remove vaccines based on the list below:
@@ -103,7 +103,7 @@ set_rdhs_config(email = "ewatts13@jhu.edu",
 # Enter password: verseteam
 
 
-# Begin VERSE Function
+##### VERSE Function #####
 
 VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) { 
   
@@ -244,7 +244,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                       "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "h9a", "h0", "h10", "hw1",
                       "h50", "h61", "h62", "h63", "h51", "h52", "h53", "h54", "h55", "h56", "h57", "h58",
                       "h59", "h60", "h64", "h65", "h66", "hep0", "hep1", "hep2", "hep3", "s515", "b5", "b4","b8","b9", "b19", "sstate", "sdistri", "sslumc", "sslumo", 
-                      "sd005", "s190s", "s190u", "s191u", "s190us", "s190r", "s191r", "s190rs", "sv005", "s515")
+                      "sd005","s052", "s190s", "s190u", "s191u", "s190us", "s190r", "s191r", "s190rs", "sv005", "s515")
     
     # Replace dataset iin memory with smaller dataset
     dhs_data <- DATA %>% select(any_of(default_keep))
@@ -312,6 +312,10 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   
   if (summary(dhs_data$v481)[6] >=8){
     dhs_data <- dhs_data %>% mutate("v481" = ifelse(dhs_data$v481>=8,0,dhs_data$v481))
+  }
+  
+  if ((COUNTRY=="Uganda")&(YEAR<2005)){
+    dhs_data$v190<-dhs_data$s052
   }
   
   #Create Vaccine-Specific Outcomes
@@ -630,10 +634,14 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data$v024 <- dhs_data$sstate/10
   }
   
-  if(COUNTRY[1]=="Uganda"){
+  if((COUNTRY[1]=="Uganda")&(YEAR>2012)){
     dhs_data$GEO<-dhs_data$v101
     dhs_data$v101 <- dhs_data$v101+1
     dhs_data$v024 <- dhs_data$v024+1
+  }
+  
+  if((COUNTRY[1]=="Uganda")&(YEAR==2011)){
+    dhs_data$GEO<-dhs_data$v101
   }
   
   if(COUNTRY[1]=="Senegal"){
@@ -747,7 +755,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   if(COUNTRY[1]=="Nigeria"){
     GEO_CI<- c(val_labels(dhs_data$sstate))
   } else{
-    if(COUNTRY[1]=="Uganda"){
+    if((COUNTRY[1]=="Uganda")&(YEAR>2012)){
       GEO_CI<- c(val_labels(dhs_data$GEO))
     } else {
       if(COUNTRY[1]=="Jordan"){
@@ -785,6 +793,11 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                         } else {
                           GEO_CI<- c(val_labels(dhs_data$v101))
                         }}}}}}}}}}}}
+  
+  #Fix Uganda 2011
+  if((COUNTRY[1]=="Uganda")&(YEAR==2011)){
+    GEO_CI <- GEO_CI[1:10]
+  }
   
   #Store Geographic Sub-unit Names
   GEO_CI<- names(GEO_CI)
@@ -1541,7 +1554,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       GEO_NAMES <- names(GEO_UNIT)
       GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
     } else {
-      if (COUNTRY=="Uganda"){
+      if ((COUNTRY=="Uganda")&(YEAR>2012)){
         GEO_UNIT <- c(val_labels(dhs_data$GEO))
         GEO_NAMES <- names(GEO_UNIT)
         GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
@@ -1600,15 +1613,21 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                             GEO_NAMES <- names(GEO_UNIT)
                             GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                           } else {
-                            if (FLAG[1]==1){
+                            if ((COUNTRY=="Uganda")&(YEAR==2011)){
                               GEO_UNIT <- c(val_labels(dhs_data$GEO))
+                              GEO_UNIT<-GEO_UNIT[1:10]
                               GEO_NAMES <- names(GEO_UNIT)
                               GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
-                            } else {
-                              GEO_UNIT <- c(val_labels(dhs_data$v101))
-                              GEO_NAMES <- names(GEO_UNIT)
-                              GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
-                            }}}}}}}}}}}}}
+                            } else  {
+                              if (FLAG[1]==1){
+                                GEO_UNIT <- c(val_labels(dhs_data$GEO))
+                                GEO_NAMES <- names(GEO_UNIT)
+                                GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                              } else {
+                                GEO_UNIT <- c(val_labels(dhs_data$v101))
+                                GEO_NAMES <- names(GEO_UNIT)
+                                GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                              }}}}}}}}}}}}}}
     
     if (COUNTRY=="Egypt"){
       efficiency <- cbind.data.frame(CI_Results_GEO[-c(2,5)], GEO_UNIT[-c(2,5)], GEO_NAMES[-c(2,5)], GEO_LABEL[-c(2,5)], efficiency_data)
@@ -1657,6 +1676,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
         guides(color = guide_legend(override.aes = list(size = 0)))
       
     }
+    
     
     
     output_list[[paste("efficiency_",i, sep="")]] <- assign(paste("efficiency_",i, sep=""),efficiency_i)
