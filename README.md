@@ -209,7 +209,7 @@ After successfully running the toolkit, the coverage and equity metrics can be c
    results$[ENTER DESIRED METRIC AND SPECIFICATION HERE]
    ```
 
-The code for the metrics are presented in the <a href="#verse-metrics">list above</a> (in <i>italics</i>). The codes for the specifications (national or subnational level, vaccine, and factor of inequity) are detailed in the <a href="https://github.com/VERSE-Equity/VERSE-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>VERSE Equity Toolkit User Guide</strong></a>.
+The code for the metrics are presented in the <a href="#verse-metrics">list above</a> (in <i>italics</i>). The codes for the specifications (national or subnational level, vaccine, and factor of inequity) are detailed in the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>VERSE Equity Toolkit User Guide</strong></a>.
 
 Examples:
    ```r
@@ -225,7 +225,7 @@ Examples:
    results$CI_GEO_MCV1
    ```
 
-<p>Consult the <a href="https://github.com/VERSE-Equity/VERSE-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf">VERSE Equity Toolkit User Guide</a> for more details.</p>
+<p>Consult the <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf">VERSE Equity Toolkit User Guide</a> for more details.</p>
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
