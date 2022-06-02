@@ -15,9 +15,9 @@
     <a href="https://github.com/VERSE-Equity/Toolkit-DHS/blob/main/Guide%20-%20How%20to%20use%20the%20VERSE%20Equity%20Tool%20to%20analyze%20DHS%20data.pdf"><strong>Open the User Guide »</strong></a>
     <br />
     <br />
-    <a href="https://immunizationeconomics.org/verse-home">Learn about the project</a>
+    <a href="https://immunizationeconomics.org/verse-home">Learn about VERSE</a>
     ·
-    <a href="https://jh.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6a5667b4-6ca2-4e47-9ff6-ade4010b2a84">View Demo</a>
+    <a href="https://jh.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=575de6dd-ffe1-418b-8827-ae9f003c7651">View Demo</a>
     ·
     <a href="https://github.com/VERSE-Equity/Toolkit-DHS/issues">Report Bug</a>
     ·
