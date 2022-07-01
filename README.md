@@ -75,13 +75,16 @@
 ## About The Project
 
 <p>As low and middle-income countries expand domestic investment in vaccines, data on the economic value of these investments can help decisionmakers compare the benefits of vaccination with other health and non-health investments. These data can also provide advocates with rigorous evidence to demonstrate the impact of vaccines in terms that are comparable with other sectors. Additionally, it is crucial to understand inequities in access and coverage and how inequitable vaccine coverage may impede full the realization of the benefits of vaccines at the national level.</p>
+<p>The toolkit was officially launched on May 25, 2022. You can watch a full presentation and demonstration of the toolkit in the video below:</p>
 <br>
 <div align="center">
-<a href="https://youtu.be/zqxSvMsl9dk">
-    <img src="https://img.youtube.com/vi/zqxSvMsl9dk/0.jpg" alt="Logo" width="480" height="360">
+<a href="https://youtu.be/9cYZyZi5cJY">
+    <img src="https://pbs.twimg.com/media/FThtq_xXEAcbiy_?format=jpg&name=large" alt="Logo" width="480" height="270">
   <p>Click to access the video</p>
   </a>
 </div>
+<br>
+<p>Attendees received a post-webinar folio with useful links, <a href="https://drive.google.com/drive/folders/1dB0YunrcwI__1Ki8MdVYjvS2ZrJEH0ve?usp=sharing">accessible here</a>.</p>
 <br>
 <p><a href="https://immunizationeconomics.org/verse-home"><strong>Learn more about the VERSE project »</strong></a></p>
 
