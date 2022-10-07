@@ -17,8 +17,8 @@ setwd("YOUR DIRECTORY HERE")
 ##### VERSE Equity Tool Inputs #####
 
 # ACTION NEEDED: Choose the country and DHS year based on the country list: https://dhsprogram.com/Countries/
-COUNTRY <- "Uganda"
-YEAR <- 2000
+COUNTRY <- "Madagascar"
+YEAR <- 2021
 
 
 # ACTION NEEDED: Leave default vaccines or add/remove vaccines based on the list below:
@@ -43,49 +43,34 @@ GEO      <- "District"
 
 
 ##### R Packages Installation #####
-# Before running the install.packages(), please ensure your R and R-Studio are up-to-date
-# Remove the (#) sign to enable the R package install function
-# To run the program faster next time, only run install.packages() once
-
-
-#install.packages("ggrepel")
-#install.packages("prevR")
-#install.packages("sf")
-#install.packages("matchmaker")
-#install.packages("rmapshaper")
-#install.packages("PHEindicatormethods")
-#install.packages("radiant")
-#install.packages("StatMeasures")
-#devtools::install_github("ropensci/rdhs", ref = "issue33_path")
-#devtools::install_github("ropensci/rdhs")
-
-
-##### R Packages Loading #####
-library(usethis)
-library(rmapshaper)
-library(PHEindicatormethods)
-library(radiant)
-library(StatMeasures)
-library(grid)
-library(Matrix)
-library(dplyr)
-library(tidyverse)
-library(devtools)
-library(rdhs)
-library(survey)
-library(haven)
-library(margins)
-library(tibble)
-library(rineq)
-library(labelled)
-library(ggplot2)
-library(ggforce)
-library(ggrepel)
-library(prevR)
-library(sf)
-library(matchmaker)
-library(RColorBrewer)
-library(foreign)
+# Before running the program and install & load the packages, please ensure your R and R-Studio are up-to-date
+if(!require(usethis)) install.packages("usethis", repos = "http://cran.us.r-project.org")
+if(!require(rmapshaper)) install.packages("rmapshaper", repos = "http://cran.us.r-project.org")
+if(!require(PHEindicatormethods)) install.packages("PHEindicatormethods", repos = "http://cran.us.r-project.org")
+if(!require(radiant)) install.packages("radiant", repos = "http://cran.us.r-project.org")
+if(!require(grid)) install.packages("grid", repos = "http://cran.us.r-project.org")
+if(!require(Matrix)) install.packages("Matrix", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(devtools)) install.packages("devtools", repos = "http://cran.us.r-project.org")
+if(!require(rdhs)) install.packages("rdhs", repos = "http://cran.us.r-project.org")
+#if(!require(rdhs)) devtools::install_github("ropensci/rdhs")
+if(!require(survey)) install.packages("survey", repos = "http://cran.us.r-project.org")
+if(!require(haven)) install.packages("haven", repos = "http://cran.us.r-project.org")
+if(!require(margins)) install.packages("margins", repos = "http://cran.us.r-project.org")
+if(!require(tibble)) install.packages("tibble", repos = "http://cran.us.r-project.org")
+if(!require(rineq)) devtools::install_github("brechtdv/rineq")
+if(!require(labelled)) install.packages("labelled", repos = "http://cran.us.r-project.org")
+if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+if(!require(ggforce)) install.packages("ggforce", repos = "http://cran.us.r-project.org")
+if(!require(ggrepel)) install.packages("ggrepel", repos = "http://cran.us.r-project.org")
+if(!require(prevR)) install.packages("prevR", repos = "http://cran.us.r-project.org")
+if(!require(sf)) install.packages("sf", repos = "http://cran.us.r-project.org")
+if(!require(matchmaker)) install.packages("matchmaker", repos = "http://cran.us.r-project.org")
+if(!require(RColorBrewer)) install.packages("RColorBrewer", repos = "http://cran.us.r-project.org")
+if(!require(foreign)) install.packages("foreign", repos = "http://cran.us.r-project.org")
+if(!require(readxl)) install.packages("readxl", repos = "http://cran.us.r-project.org")
+if(!require(magrittr)) install.packages("magrittr", repos = "http://cran.us.r-project.org")
 
 
 
@@ -140,9 +125,6 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     if (MAP=="YES"){
       mapping <- download_boundaries(surveyId = mapid, method = "sf", quiet_download = TRUE)
     }
-    
-    # TROUBLESHOOTING: If error due to file not being able to unzip
-    # Type in the following: get_available_datasets(clear_cache=TRUE)
     
     # Store relevant dataset names
     datasets <- dhs_datasets(surveyIds = survs$SurveyId, 
@@ -686,6 +668,17 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                                            ifelse(dhs_data$v101>30, dhs_data$v101-5,dhs_data$v101))))
   }
   
+  if((COUNTRY[1]=="Madagascar")&(YEAR>2018)){
+    dhs_data$GEO<-dhs_data$v101
+    dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=1 & dhs_data$v101<=20, dhs_data$v101-9,
+                                                    ifelse(dhs_data$v101>=20 & dhs_data$v101<=30, dhs_data$v101-15,
+                                                           ifelse(dhs_data$v101>=30 & dhs_data$v101<=40, dhs_data$v101-20,
+                                                                  ifelse(dhs_data$v101>=40 & dhs_data$v101<=50, dhs_data$v101-27,
+                                                                         ifelse(dhs_data$v101>=50 & dhs_data$v101<=60, dhs_data$v101-33,
+                                                                                ifelse(dhs_data$v101>60, dhs_data$v101-39,dhs_data$v101)))))))
+    
+  }
+  
   if(min(dhs_data$v101)==0){
     FLAG <- 1
     dhs_data$GEO<-dhs_data$v101
@@ -788,11 +781,14 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                       if((COUNTRY[1]=="India") & (YEAR<=2007)){
                         GEO_CI<- c(val_labels(dhs_data$GEO))
                       } else {
-                        if(FLAG[1]==1){
-                          GEO_CI<- c(val_labels(dhs_data$GEO))
+                        if((COUNTRY[1]=="Madagascar") & (YEAR<=2021)){
+                          GEO_CI<- c(val_labels(dhs_data$v024))
                         } else {
-                          GEO_CI<- c(val_labels(dhs_data$v101))
-                        }}}}}}}}}}}}
+                          if(FLAG[1]==1){
+                            GEO_CI<- c(val_labels(dhs_data$GEO))
+                          } else {
+                            GEO_CI<- c(val_labels(dhs_data$v101))
+                          }}}}}}}}}}}}}
   
   #Fix Uganda 2011
   if((COUNTRY[1]=="Uganda")&(YEAR==2011)){
@@ -1619,15 +1615,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                               GEO_NAMES <- names(GEO_UNIT)
                               GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                             } else  {
-                              if (FLAG[1]==1){
-                                GEO_UNIT <- c(val_labels(dhs_data$GEO))
+                              if ((COUNTRY=="Madagascar")& (YEAR<=2021)){
+                                GEO_UNIT <- c(val_labels(dhs_data$v024))
                                 GEO_NAMES <- names(GEO_UNIT)
                                 GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
-                              } else {
-                                GEO_UNIT <- c(val_labels(dhs_data$v101))
-                                GEO_NAMES <- names(GEO_UNIT)
-                                GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
-                              }}}}}}}}}}}}}}
+                              } else  { 
+                                if (FLAG[1]==1){
+                                  GEO_UNIT <- c(val_labels(dhs_data$GEO))
+                                  GEO_NAMES <- names(GEO_UNIT)
+                                  GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                                } else {
+                                  GEO_UNIT <- c(val_labels(dhs_data$v101))
+                                  GEO_NAMES <- names(GEO_UNIT)
+                                  GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                                }}}}}}}}}}}}}}}
     
     if (COUNTRY=="Egypt"){
       efficiency <- cbind.data.frame(CI_Results_GEO[-c(2,5)], GEO_UNIT[-c(2,5)], GEO_NAMES[-c(2,5)], GEO_LABEL[-c(2,5)], efficiency_data)
@@ -1896,9 +1897,6 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
 
 ##### Run Function #####
 results <- VERSE(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP)
-
-# Call Results
-results
 
 # See Guidance Documentation for how to call specific results within the results list
 
