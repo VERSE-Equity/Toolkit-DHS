@@ -1,6 +1,6 @@
 ######################################################
 # Vaccine Economics Research for Sustainability and Equity (VERSE)
-# VERSE Equity Tool
+# VERSE Equity Toolkit
 ######################################################
 rm(list=ls()) # clear
 
@@ -28,7 +28,6 @@ VACCINES <- c("BCG","DTP1","DTP2","DTP3","POLIO1","POLIO2","POLIO3","MCV1","ZERO
 
 # ACTION NEEDED: Change whether you want maps to be generated ("YES" --> more processing time)
 MAP = "YES"
-
 
 # Other model inputs (keep default unless more advanced programming is required)
 FACTORS  <-c("region","rural","education","wealth","sex","insurance")
@@ -1757,7 +1756,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     CI_E_Results_GEO_Output<- cbind.data.frame(CI_E_Results_GEO_Output, CI_E_Results_GEO)
     CI_E_Results_GEO_Output_95ciLB<- cbind.data.frame(CI_E_Results_GEO_Output_95ciLB, CI_E_Results_GEO_95ciLB)
     CI_E_Results_GEO_Output_95ciUB<- cbind.data.frame(CI_E_Results_GEO_Output_95ciUB, CI_E_Results_GEO_95ciUB)
-    AEG_Composite_Results_GEO_Output<- cbind.data.frame(AEG_Rural_Results_GEO_Output, AEG_Composite_Results_GEO)
+    AEG_Composite_Results_GEO_Output<- cbind.data.frame(AEG_Composite_Results_GEO_Output, AEG_Composite_Results_GEO)
     AEG_Composite_Results_GEO_Output_95ciLB<- cbind.data.frame(AEG_Composite_Results_GEO_Output_95ciLB, AEG_Composite_Results_GEO_95ciLB)
     AEG_Composite_Results_GEO_Output_95ciUB<- cbind.data.frame(AEG_Composite_Results_GEO_Output_95ciUB, AEG_Composite_Results_GEO_95ciUB)
     Coverage_Results_GEO_Output<- cbind.data.frame(Coverage_Results_GEO_Output, Coverage_Results_GEO)
