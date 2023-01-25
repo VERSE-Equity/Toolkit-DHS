@@ -1007,20 +1007,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     pred_probs_3 <- data.frame(hci_fair = prob)
     
     # Calculating the Direct Concentration Index
-    direct_ci <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, type = "CI")
+    direct_ci <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CI")
     CI_1 <- round(concentration_index(direct_ci), digits = 3)
     CI_1_95ciLB<- round(CI_1 - 1.96*sqrt(direct_ci$variance), digits = 3)
     CI_1_95ciUB<- round(CI_1 + 1.96*sqrt(direct_ci$variance), digits = 3)
     
     # Calculating the Horizontal Ineqity Index (HII) 
-    CIFair <- ci(y = pred_probs_3$hci_fair, x = pred_probs_2$hci_du.response, type = "CI")
+    CIFair <- ci(y = pred_probs_3$hci_fair, x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CI")
     CI_Fair <- concentration_index(CIFair)
     HII <- round(CI_1 - CI_Fair, digits = 3)
     HII_95ciLB<- round(HII - (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i]))), digits = 3)
     HII_95ciUB<- round(HII + (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i]))), digits = 3)
     
     # Calculating the Erreygers Corrected Composite Concentration Index 
-    CIE <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, type = "CIc")
+    CIE <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CIc")
     CI_E <- round(concentration_index(CIE), digits = 3)
     CI_E_95ciLB<- round(CI_E - 1.96*sqrt(CIE$variance), digits = 3)
     CI_E_95ciUB<- round(CI_E + 1.96*sqrt(CIE$variance), digits = 3)
@@ -1383,20 +1383,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       pred_probs_3_k <- subset(pred_probs_3, (data_i$v101==k))
       
       # Calculating the Direct Concentration Index
-      direct_ci <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, type = "CI")
+      direct_ci <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CI")
       CI_1 <- concentration_index(direct_ci)
       CI_1_95ciLB<- CI_1 - 1.96*sqrt(direct_ci$variance)
       CI_1_95ciUB<- CI_1 + 1.96*sqrt(direct_ci$variance)
       
       # Calculating the Horizontal Ineqity Index (HII) 
-      CIFair <- ci(y = pred_probs_3_k$hci_fair, x = pred_probs_2_k$hci_du.response, type = "CI")
+      CIFair <- ci(y = pred_probs_3_k$hci_fair, x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CI")
       CI_Fair <- concentration_index(CIFair)
       HII <- CI_1 - CI_Fair
       HII_95ciLB<- HII - (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i])))
       HII_95ciUB<- HII + (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i])))
       
       # Calculating the Erreygers Corrected Concentration Index 
-      CIE <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, type = "CIc")
+      CIE <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CIc")
       CI_E <- concentration_index(CIE)
       CI_E_95ciLB<- CI_E - 1.96*sqrt(CIE$variance)
       CI_E_95ciUB<- CI_E + 1.96*sqrt(CIE$variance)
