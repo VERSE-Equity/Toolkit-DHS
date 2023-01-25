@@ -1031,9 +1031,9 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     comp_data<- data.frame(cbind(data_i[,i],data_i[,"v005"],rank))
     names(comp_data)[names(comp_data) == "V1"] <- paste("",i, sep="")
     names(comp_data)[names(comp_data) == "V2"] <- paste("v005","", sep="")
-    AEG_Composite <- round(weighted.mean(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]) - weighted.mean(comp_data[,i][rank<=quantiles[2]],comp_data[,"v005"][rank<=quantiles[2]]), digits=3)
-    AEG_Composite_95ciLB <- round(AEG_Composite - (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<=quantiles[2]],comp_data[,"v005"][rank<=quantiles[2]]))^2)/length(comp_data[,i][rank<=quantiles[2]]))), digits=3)), digits = 3)
-    AEG_Composite_95ciUB <- round(AEG_Composite + (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<=quantiles[2]],comp_data[,"v005"][rank<=quantiles[2]]))^2)/length(comp_data[,i][rank<=quantiles[2]]))), digits=3)), digits = 3)
+    AEG_Composite <- round(weighted.mean(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]) - weighted.mean(comp_data[,i][rank<quantiles[2]],comp_data[,"v005"][rank<quantiles[2]]), digits=3)
+    AEG_Composite_95ciLB <- round(AEG_Composite - (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<quantiles[2]],comp_data[,"v005"][rank<quantiles[2]]))^2)/length(comp_data[,i][rank<quantiles[2]]))), digits=3)), digits = 3)
+    AEG_Composite_95ciUB <- round(AEG_Composite + (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<quantiles[2]],comp_data[,"v005"][rank<quantiles[2]]))^2)/length(comp_data[,i][rank<quantiles[2]]))), digits=3)), digits = 3)
     
     assign(paste("CI_1_",i, sep=""),CI_1)
     assign(paste("HII_",i, sep=""), HII)
@@ -1407,9 +1407,9 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       comp_data_k<- data.frame(cbind(data_k[,i],data_k[,"v005"],rank))
       names(comp_data_k)[names(comp_data_k) == "V1"] <- paste("",i, sep="")
       names(comp_data_k)[names(comp_data_k) == "V2"] <- paste("v005","", sep="")
-      AEG_Composite <- round(weighted.mean(comp_data_k[,i][rank>=quantiles[5]],comp_data_k[,"v005"][rank>=quantiles[5]]) - weighted.mean(comp_data_k[,i][rank<=quantiles[2]],comp_data_k[,"v005"][rank<=quantiles[2]]), digits=3)
-      AEG_Composite_95ciLB <- AEG_Composite - (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<=quantiles[2]],comp_data[,"v005"][rank<=quantiles[2]]))^2)/length(comp_data[,i][rank<=quantiles[2]]))), digits=3))
-      AEG_Composite_95ciUB <- AEG_Composite + (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<=quantiles[2]],comp_data[,"v005"][rank<=quantiles[2]]))^2)/length(comp_data[,i][rank<=quantiles[2]]))), digits=3))
+      AEG_Composite <- round(weighted.mean(comp_data_k[,i][rank>=quantiles[5]],comp_data_k[,"v005"][rank>=quantiles[5]]) - weighted.mean(comp_data_k[,i][rank<quantiles[2]],comp_data_k[,"v005"][rank<quantiles[2]]), digits=3)
+      AEG_Composite_95ciLB <- AEG_Composite - (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<quantiles[2]],comp_data[,"v005"][rank<quantiles[2]]))^2)/length(comp_data[,i][rank<quantiles[2]]))), digits=3))
+      AEG_Composite_95ciUB <- AEG_Composite + (1.96*round(sqrt(((weighted.sd(comp_data[,i][rank>=quantiles[5]],comp_data[,"v005"][rank>=quantiles[5]]))^2)/length(comp_data[,i][rank>=quantiles[5]]) + (((weighted.sd(comp_data[,i][rank<quantiles[2]],comp_data[,"v005"][rank<quantiles[2]]))^2)/length(comp_data[,i][rank<quantiles[2]]))), digits=3))
       
       # Calculating State-Level Coverage
       data_kc <- subset(data_k, data_k[,"underage_i"]==0)
