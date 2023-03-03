@@ -1734,6 +1734,9 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       #Create Mapping Data
       map <- cbind.data.frame(Coverage_Results_GEO, CI_Results_GEO, GEO_UNIT)
       names(map)[names(map) == "GEO_UNIT"] <- "REGCODE"
+      if (COUNTRY=="Peru"){
+        mapping$sdr_subnational_boundaries$REGCODE<- replace(mapping$sdr_subnational_boundaries$REGCODE, 14, 15)
+      }
       map_data = left_join(mapping$sdr_subnational_boundaries, map)
       maptitle_equity<- (ifelse(i=="ZERO","Zero-Dose Equity Heat Map",
                                 ifelse(i=="FULL","Fully Immunized Equity Heat Map", 
