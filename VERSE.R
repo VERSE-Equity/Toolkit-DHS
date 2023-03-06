@@ -43,10 +43,11 @@ GEO      <- "District"
 
 ##### R Packages Installation #####
 # Before running the program and install & load the packages, please ensure your R and R-Studio are up-to-date
+# Please note the version numbers for packages "PHEindicatormethods" and "radiant"
 if(!require(usethis)) install.packages("usethis", repos = "http://cran.us.r-project.org")
 if(!require(rmapshaper)) install.packages("rmapshaper", repos = "http://cran.us.r-project.org")
-if(!require(PHEindicatormethods)) install.packages("PHEindicatormethods", repos = "http://cran.us.r-project.org")
-if(!require(radiant)) install.packages("radiant", repos = "http://cran.us.r-project.org")
+if(!require(PHEindicatormethods)) install.packages("PHEindicatormethods", version="1.4.2", repos = "http://cran.us.r-project.org")
+if(!require(radiant)) install.packages("radiant", version = "1.4.4", repos = "http://cran.us.r-project.org")
 if(!require(grid)) install.packages("grid", repos = "http://cran.us.r-project.org")
 if(!require(Matrix)) install.packages("Matrix", repos = "http://cran.us.r-project.org")
 if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
