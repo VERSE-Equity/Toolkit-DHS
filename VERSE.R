@@ -481,7 +481,18 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   if ("IPV3" %in% VACCINES){
     dhs_data <- dhs_data %>% mutate("IPV3" = ifelse((dhs_data$h8 ==0 | dhs_data$h8 >=8) & (dhs_data$IPVind ==1), 0,
                                                     ifelse(dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3, 1,
-                                                           "NA")))}
+                                                           "NA")))} 
+  # Fix DTP for Tanzania in 2004 
+ if (COUNTRY=="Tanzania" & YEAR==2004){
+    if ("DTP1" %in% VACCINES){
+      dhs_data <- dhs_data %>% mutate("DTP1" = ifelse((dhs_data$POLIO1 ==1 & dhs_data$DTP1==0), 1,
+                                                      dhs_data$DTP1))}
+    if ("DTP2" %in% VACCINES){
+      dhs_data <- dhs_data %>% mutate("DTP2" = ifelse((dhs_data$POLIO2 ==1 & dhs_data$DTP2==0), 1,
+                                                      dhs_data$DTP2))}
+    if ("DTP3" %in% VACCINES){
+      dhs_data <- dhs_data %>% mutate("DTP3" = ifelse((dhs_data$POLIO3 ==1 & dhs_data$DTP3==0), 1,
+                                                      dhs_data$DTP3))}}
   
   # Indicator for Fully Immunized for Age (1 = Fully Immuniized, 0 = Not Fully Immunized, NA = no data)
   # At a minimum Fully Immunized utilizes data on BCG, MCV1, Polio1-3, DTP1-3 (and Penta1-3, depending on location)
@@ -672,6 +683,11 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                                     ifelse(dhs_data$v101>=25 & dhs_data$v101<=30, dhs_data$v101-3,
                                                            ifelse(dhs_data$v101>30, dhs_data$v101-5,dhs_data$v101))))
   }
+
+  if((COUNTRY[1]=="Tanzania") & (YEAR==2004)){
+    dhs_data$GEO<-dhs_data$v101
+    dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=22, dhs_data$v101-29, dhs_data$v101))
+  }
   
   if((COUNTRY[1]=="Madagascar")&(YEAR>2018)){
     dhs_data$GEO<-dhs_data$v101
@@ -749,7 +765,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data[,nameref] = REF[j]
   }
   
-  # Correct geographiclabels if stored in sstate instead of v101
+    # Correct geographiclabels if stored in sstate instead of v101
   if(COUNTRY[1]=="Nigeria"){
     GEO_CI<- c(val_labels(dhs_data$sstate))
   } else{
@@ -789,11 +805,14 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                         if((COUNTRY[1]=="Madagascar") & (YEAR<=2021)){
                           GEO_CI<- c(val_labels(dhs_data$v024))
                         } else {
+                          if((COUNTRY[1]=="Tanzania") & (YEAR<=2004)){
+                            GEO_CI<- c(val_labels(dhs_data$v024))
+                          } else {
                           if(FLAG[1]==1){
                             GEO_CI<- c(val_labels(dhs_data$GEO))
                           } else {
                             GEO_CI<- c(val_labels(dhs_data$v101))
-                          }}}}}}}}}}}}}
+                          }}}}}}}}}}}}}}
   
   #Fix Uganda 2011
   if((COUNTRY[1]=="Uganda")&(YEAR==2011)){
@@ -1589,7 +1608,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                          sex = weighted.mean(b4,v005)*100/2,
                                          insurance = weighted.mean(v481,v005))))
     
-    if (COUNTRY=="Nigeria"){
+ if (COUNTRY=="Nigeria"){
       GEO_UNIT <- c(val_labels(dhs_data$sstate))
       GEO_NAMES <- names(GEO_UNIT)
       GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
@@ -1663,6 +1682,11 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                 GEO_UNIT <- c(val_labels(dhs_data$v024))
                                 GEO_NAMES <- names(GEO_UNIT)
                                 GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
+                              } else  {
+                                if ((COUNTRY=="Tanzania")& (YEAR<=2004)){
+                                  GEO_UNIT <- c(val_labels(dhs_data$v024))
+                                  GEO_NAMES <- names(GEO_UNIT)
+                                  GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                               } else  { 
                                 if (FLAG[1]==1){
                                   GEO_UNIT <- c(val_labels(dhs_data$GEO))
@@ -1672,7 +1696,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                   GEO_UNIT <- c(val_labels(dhs_data$v101))
                                   GEO_NAMES <- names(GEO_UNIT)
                                   GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
-                                }}}}}}}}}}}}}}}
+                                }}}}}}}}}}}}}}}}
     
     if (COUNTRY=="Egypt"){
       efficiency <- cbind.data.frame(CI_Results_GEO[-c(2,5)], GEO_UNIT[-c(2,5)], GEO_NAMES[-c(2,5)], GEO_LABEL[-c(2,5)], efficiency_data)
