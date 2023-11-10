@@ -689,6 +689,11 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=22, dhs_data$v101-29, dhs_data$v101))
   }
   
+   if((COUNTRY[1]=="Tanzania") & (YEAR==2022)){
+    dhs_data$GEO<-dhs_data$v101
+    dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=27, dhs_data$v101-24, dhs_data$v101))
+  }
+  
   if((COUNTRY[1]=="Madagascar")&(YEAR>2018)){
     dhs_data$GEO<-dhs_data$v101
     dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=1 & dhs_data$v101<=20, dhs_data$v101-9,
@@ -805,7 +810,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                         if((COUNTRY[1]=="Madagascar") & (YEAR<=2021)){
                           GEO_CI<- c(val_labels(dhs_data$v024))
                         } else {
-                          if((COUNTRY[1]=="Tanzania") & (YEAR<=2004)){
+                          if((COUNTRY[1]=="Tanzania") & ((YEAR<=2004)|(YEAR==2022))){
                             GEO_CI<- c(val_labels(dhs_data$v024))
                           } else {
                           if(FLAG[1]==1){
@@ -1683,7 +1688,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                 GEO_NAMES <- names(GEO_UNIT)
                                 GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                               } else  {
-                                if ((COUNTRY=="Tanzania")& (YEAR<=2004)){
+                                if ((COUNTRY=="Tanzania")& ((YEAR<=2004)|(YEAR==2022))){
                                   GEO_UNIT <- c(val_labels(dhs_data$v024))
                                   GEO_NAMES <- names(GEO_UNIT)
                                   GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
