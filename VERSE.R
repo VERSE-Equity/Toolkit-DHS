@@ -54,7 +54,6 @@ if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.
 if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 if(!require(devtools)) install.packages("devtools", repos = "http://cran.us.r-project.org")
 if(!require(rdhs)) install.packages("rdhs", repos = "http://cran.us.r-project.org")
-#if(!require(rdhs)) devtools::install_github("ropensci/rdhs")
 if(!require(survey)) install.packages("survey", repos = "http://cran.us.r-project.org")
 if(!require(haven)) install.packages("haven", repos = "http://cran.us.r-project.org")
 if(!require(margins)) install.packages("margins", repos = "http://cran.us.r-project.org")
@@ -1032,20 +1031,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     pred_probs_3 <- data.frame(hci_fair = prob)
     
     # Calculating the Direct Concentration Index
-    direct_ci <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CI")
+    direct_ci <- ci(outcome = data_i[,i], ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CI")
     CI_1 <- round(concentration_index(direct_ci), digits = 3)
     CI_1_95ciLB<- round(CI_1 - 1.96*sqrt(direct_ci$variance), digits = 3)
     CI_1_95ciUB<- round(CI_1 + 1.96*sqrt(direct_ci$variance), digits = 3)
     
     # Calculating the Horizontal Ineqity Index (HII) 
-    CIFair <- ci(y = pred_probs_3$hci_fair, x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CI")
+    CIFair <- ci(outcome = pred_probs_3$hci_fair, ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CI")
     CI_Fair <- concentration_index(CIFair)
     HII <- round(CI_1 - CI_Fair, digits = 3)
     HII_95ciLB<- round(HII - (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i]))), digits = 3)
     HII_95ciUB<- round(HII + (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i]))), digits = 3)
     
     # Calculating the Erreygers Corrected Composite Concentration Index 
-    CIE <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CIc")
+    CIE <- ci(outcome = data_i[,i], ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CIc")
     CI_E <- round(concentration_index(CIE), digits = 3)
     CI_E_95ciLB<- round(CI_E - 1.96*sqrt(CIE$variance), digits = 3)
     CI_E_95ciUB<- round(CI_E + 1.96*sqrt(CIE$variance), digits = 3)
@@ -1202,14 +1201,14 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     RII_wealth<- round(SII_output[2], digits = 3) 
     
     #Create Errygers Corrected concentration index for socio-economic status
-    ci_errygers <- ci(x=data_i[,i],y=data_i[,FACT[4]],wt=data_i$v005,type = "CIc")
+    ci_errygers <- ci(outcome = data_i[,i], ineqvar = data_i[,FACT[4]], weights = data_i$v005, type = "CIc")
     CI_E_Wealth <- round(concentration_index(ci_errygers), digits = 3)
     CI_E_Wealth_95ciLB<- round(CI_E_Wealth - 1.96*sqrt(abs(ci_errygers$variance)), digits = 3)
     CI_E_Wealth_95ciUB<- round(CI_E_Wealth + 1.96*sqrt(abs(ci_errygers$variance)), digits = 3)
     
     
     #Create Wagstaff concentration index for socio-economic status
-    ci_wagstaff <- ci(x=data_i[,i],y=data_i[,FACT[4]],wt=data_i$v005,type = "CI")
+    ci_wagstaff <- ci(outcome = data_i[,i], ineqvar =data_i[,FACT[4]], weights = data_i$v005, type = "CI")
     CI_W_Wealth <- round(concentration_index(ci_wagstaff), digits = 3)
     CI_W_Wealth_95ciLB<- round(CI_W_Wealth - 1.96*sqrt(abs(ci_wagstaff$variance)), digits = 3)
     CI_W_Wealth_95ciUB<- round(CI_W_Wealth + 1.96*sqrt(abs(ci_wagstaff$variance)), digits = 3)
@@ -1408,20 +1407,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       pred_probs_3_k <- subset(pred_probs_3, (data_i$v101==k))
       
       # Calculating the Direct Concentration Index
-      direct_ci <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CI")
+      direct_ci <- ci(outcome = data_k[,i], ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CI")
       CI_1 <- concentration_index(direct_ci)
       CI_1_95ciLB<- CI_1 - 1.96*sqrt(direct_ci$variance)
       CI_1_95ciUB<- CI_1 + 1.96*sqrt(direct_ci$variance)
       
       # Calculating the Horizontal Ineqity Index (HII) 
-      CIFair <- ci(y = pred_probs_3_k$hci_fair, x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CI")
+      CIFair <- ci(outcome = pred_probs_3_k$hci_fair, ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CI")
       CI_Fair <- concentration_index(CIFair)
       HII <- CI_1 - CI_Fair
       HII_95ciLB<- HII - (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i])))
       HII_95ciUB<- HII + (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i])))
       
       # Calculating the Erreygers Corrected Concentration Index 
-      CIE <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CIc")
+      CIE <- ci(outcome = data_k[,i], ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CIc")
       CI_E <- concentration_index(CIE)
       CI_E_95ciLB<- CI_E - 1.96*sqrt(CIE$variance)
       CI_E_95ciUB<- CI_E + 1.96*sqrt(CIE$variance)
@@ -1554,13 +1553,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
         RII_wealth_GEO<- ifelse(SII_output[1]=="NA","NA",round(SII_output[2], digits = 3)) 
         
         #Create Errygers Corrected concentration index for socio-economic status
-        ci_errygers_GEO <- ci(x=data_k[,i],y=data_k[,FACT[4]],wt=data_k$v005,type = "CIc")
+        ci_errygers_GEO <- ci(outcome = data_k[,i], ineqvar = data_k[,FACT[4]], weights = data_k$v005, type = "CIc")
         CI_E_Wealth_GEO <- round(concentration_index(ci_errygers_GEO), digits = 3)
         CI_E_Wealth_95ciLB_GEO<- round(CI_E_Wealth_GEO - 1.96*sqrt(abs(ci_errygers_GEO$variance)), digits = 3)
         CI_E_Wealth_95ciUB_GEO<- round(CI_E_Wealth_GEO + 1.96*sqrt(abs(ci_errygers_GEO$variance)), digits = 3)
         
         #Create Wagstaff Corrected concentration index for socio-economic status
-        ci_wagstaff_GEO <- ci(x=data_k[,i],y=data_k[,FACT[4]],wt=data_k$v005,type = "CI")
+        ci_wagstaff_GEO <- ci(outcome = data_k[,i], ineqvar = data_k[,FACT[4]], weights = data_k$v005, type = "CI")
         CI_W_Wealth_GEO <- round(concentration_index(ci_wagstaff_GEO), digits = 3)
         CI_W_Wealth_95ciLB_GEO<- round(CI_W_Wealth_GEO - 1.96*sqrt(abs(ci_wagstaff_GEO$variance)), digits = 3)
         CI_W_Wealth_95ciUB_GEO<- round(CI_W_Wealth_GEO + 1.96*sqrt(abs(ci_wagstaff_GEO$variance)), digits = 3)
