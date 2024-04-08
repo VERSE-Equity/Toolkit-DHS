@@ -173,7 +173,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   map_list <- list()
   
   # Fix Mapping Data for countries with Errors in geographic indicator formatting
-  if (COUNTRY=="Bangladesh"){
+  if ((COUNTRY=="Bangladesh")&(MAP=="YES")){
     mapping$sdr_subnational_boundaries$REGCODE <- as.numeric(c(1,2,3,4,5,6,7,8))
   }
   
