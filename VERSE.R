@@ -87,6 +87,7 @@ set_rdhs_config(email = "ewatts13@jhu.edu",
 # Enter password: verseteam
 
 
+
 ##### VERSE Function #####
 
 VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) { 
@@ -687,6 +688,11 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data$GEO<-dhs_data$v101
     dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=22, dhs_data$v101-29, dhs_data$v101))
   }
+
+  if((COUNTRY[1]=="Tanzania") & (YEAR==2015)){
+    dhs_data$GEO<-dhs_data$v101
+    dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=26, dhs_data$v101-25, dhs_data$v101))
+  }
   
    if((COUNTRY[1]=="Tanzania") & (YEAR==2022)){
     dhs_data$GEO<-dhs_data$v101
@@ -809,7 +815,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                         if((COUNTRY[1]=="Madagascar") & (YEAR<=2021)){
                           GEO_CI<- c(val_labels(dhs_data$v024))
                         } else {
-                          if((COUNTRY[1]=="Tanzania") & ((YEAR<=2004)|(YEAR==2022))){
+                          if((COUNTRY[1]=="Tanzania") & ((YEAR<=2022))){
                             GEO_CI<- c(val_labels(dhs_data$v024))
                           } else {
                           if(FLAG[1]==1){
@@ -1033,21 +1039,21 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     # Calculating the Direct Concentration Index
     direct_ci <- ci(outcome = data_i[,i], ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CI")
     CI_1 <- round(concentration_index(direct_ci), digits = 3)
-    CI_1_95ciLB<- round(CI_1 - 1.96*sqrt(direct_ci$variance), digits = 3)
-    CI_1_95ciUB<- round(CI_1 + 1.96*sqrt(direct_ci$variance), digits = 3)
+    CI_1_95ciLB<- round(CI_1 - 1.96*sqrt(abs(direct_ci$variance)), digits = 3)
+    CI_1_95ciUB<- round(CI_1 + 1.96*sqrt(abs(direct_ci$variance)), digits = 3)
     
     # Calculating the Horizontal Ineqity Index (HII) 
     CIFair <- ci(outcome = pred_probs_3$hci_fair, ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CI")
     CI_Fair <- concentration_index(CIFair)
-    HII <- round(CI_1 - CI_Fair, digits = 3)
-    HII_95ciLB<- round(HII - (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i]))), digits = 3)
-    HII_95ciUB<- round(HII + (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i]))), digits = 3)
+    HII <- round((CI_1 - CI_Fair), digits = 3)
+    HII_95ciLB<- round(HII - (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i]))), digits = 3)
+    HII_95ciUB<- round(HII + (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i]))), digits = 3)
     
     # Calculating the Erreygers Corrected Composite Concentration Index 
     CIE <- ci(outcome = data_i[,i], ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CIc")
     CI_E <- round(concentration_index(CIE), digits = 3)
-    CI_E_95ciLB<- round(CI_E - 1.96*sqrt(CIE$variance), digits = 3)
-    CI_E_95ciUB<- round(CI_E + 1.96*sqrt(CIE$variance), digits = 3)
+    CI_E_95ciLB<- round(CI_E - 1.96*sqrt(abs(CIE$variance)), digits = 3)
+    CI_E_95ciUB<- round(CI_E + 1.96*sqrt(abs(CIE$variance)), digits = 3)
     
     # Calculating the Composite Absolute Equity Gap
     rank<-c(pred_probs_2$hci_du.response)
@@ -1077,6 +1083,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     coverage<- c(weighted.mean(data_ic$outcome,data_ic$v005))
     coverage_95ciLB<- round(coverage - (1.96*sqrt((coverage*(1-coverage))/length(data_ic$outcome))), digits = 3)
     coverage_95ciUB<- round(coverage + (1.96*sqrt((coverage*(1-coverage))/length(data_ic$outcome))), digits = 3)
+    coverage<- round(coverage, digits = 3)
     
     #Name other CI Results
     CI_Results<- c(CI_Results, assign(paste("CI_1_",i, sep=""),CI_1))
@@ -1205,7 +1212,6 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     CI_E_Wealth <- round(concentration_index(ci_errygers), digits = 3)
     CI_E_Wealth_95ciLB<- round(CI_E_Wealth - 1.96*sqrt(abs(ci_errygers$variance)), digits = 3)
     CI_E_Wealth_95ciUB<- round(CI_E_Wealth + 1.96*sqrt(abs(ci_errygers$variance)), digits = 3)
-    
     
     #Create Wagstaff concentration index for socio-economic status
     ci_wagstaff <- ci(outcome = data_i[,i], ineqvar =data_i[,FACT[4]], weights = data_i$v005, type = "CI")
@@ -1409,21 +1415,21 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       # Calculating the Direct Concentration Index
       direct_ci <- ci(outcome = data_k[,i], ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CI")
       CI_1 <- concentration_index(direct_ci)
-      CI_1_95ciLB<- CI_1 - 1.96*sqrt(direct_ci$variance)
-      CI_1_95ciUB<- CI_1 + 1.96*sqrt(direct_ci$variance)
+      CI_1_95ciLB<- CI_1 - 1.96*sqrt(abs(direct_ci$variance))
+      CI_1_95ciUB<- CI_1 + 1.96*sqrt(abs(direct_ci$variance))
       
       # Calculating the Horizontal Ineqity Index (HII) 
       CIFair <- ci(outcome = pred_probs_3_k$hci_fair, ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CI")
       CI_Fair <- concentration_index(CIFair)
       HII <- CI_1 - CI_Fair
-      HII_95ciLB<- HII - (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i])))
-      HII_95ciUB<- HII + (1.96*sqrt((direct_ci$variance + CIFair$variance)/length(data_i[,i])))
+      HII_95ciLB<- HII - (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i])))
+      HII_95ciUB<- HII + (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i])))
       
       # Calculating the Erreygers Corrected Concentration Index 
       CIE <- ci(outcome = data_k[,i], ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CIc")
       CI_E <- concentration_index(CIE)
-      CI_E_95ciLB<- CI_E - 1.96*sqrt(CIE$variance)
-      CI_E_95ciUB<- CI_E + 1.96*sqrt(CIE$variance)
+      CI_E_95ciLB<- CI_E - 1.96*sqrt(abs(CIE$variance))
+      CI_E_95ciUB<- CI_E + 1.96*sqrt(abs(CIE$variance))
       
       # Calculating the Composite Absolute Equity Gap
       rank<-c(pred_probs_2_k$hci_du.response)
@@ -1440,6 +1446,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       coverage_GEO<- c(weighted.mean(data_kc$outcome,data_kc$v005))
       coverage_GEO_95ciLB<- round(coverage_GEO - (1.96*sqrt((coverage_GEO*(1-coverage_GEO))/length(data_kc$outcome))), digits = 3)
       coverage_GEO_95ciUB<- round(coverage_GEO + (1.96*sqrt((coverage_GEO*(1-coverage_GEO))/length(data_kc$outcome))), digits = 3)
+      coverage_GEO<- round(coverage_GEO, digits = 3)
       
       #Storing Results
       CI_Results_GEO<- c(CI_Results_GEO, round(CI_1, digits=3))
@@ -1687,7 +1694,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                 GEO_NAMES <- names(GEO_UNIT)
                                 GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                               } else  {
-                                if ((COUNTRY=="Tanzania")& ((YEAR<=2004)|(YEAR==2022))){
+                                if ((COUNTRY=="Tanzania")& ((YEAR<=2022))){
                                   GEO_UNIT <- c(val_labels(dhs_data$v024))
                                   GEO_NAMES <- names(GEO_UNIT)
                                   GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
@@ -1763,10 +1770,16 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       #Create Mapping Data
       map <- cbind.data.frame(Coverage_Results_GEO, CI_Results_GEO, GEO_UNIT)
       names(map)[names(map) == "GEO_UNIT"] <- "REGCODE"
+      suppressMessages(
       if (COUNTRY=="Peru"){
-        mapping$sdr_subnational_boundaries$REGCODE<- replace(mapping$sdr_subnational_boundaries$REGCODE, 14, 15)
-      }
+          mapping$sdr_subnational_boundaries$REGCODE<- replace(mapping$sdr_subnational_boundaries$REGCODE, 14, 15)
+        }
+      if (COUNTRY=="Tanzania"){
+       map_data = left_join(mapping$sdr_subnational_boundaries2, map)
+      } else {
       map_data = left_join(mapping$sdr_subnational_boundaries, map)
+      }
+      )
       maptitle_equity<- (ifelse(i=="ZERO","Zero-Dose Equity Heat Map",
                                 ifelse(i=="FULL","Fully Immunized Equity Heat Map", 
                                        ifelse(i=="COMPLETE","Completed Vaccination Schedule Equity Heat Map",
