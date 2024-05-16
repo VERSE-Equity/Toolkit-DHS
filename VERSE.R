@@ -89,7 +89,6 @@ set_rdhs_config(email = "ewatts13@jhu.edu",
 
 
 ##### VERSE Function #####
-
 VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) { 
   
   #Mute unnecessary warnings
@@ -174,7 +173,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   map_list <- list()
   
   # Fix Mapping Data for countries with Errors in geographic indicator formatting
-  if ((COUNTRY=="Bangladesh")&(MAP=="YES")){
+  if ((COUNTRY=="Bangladesh") & (MAP=="YES")){
     mapping$sdr_subnational_boundaries$REGCODE <- as.numeric(c(1,2,3,4,5,6,7,8))
   }
   
@@ -481,9 +480,9 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   if ("IPV3" %in% VACCINES){
     dhs_data <- dhs_data %>% mutate("IPV3" = ifelse((dhs_data$h8 ==0 | dhs_data$h8 >=8) & (dhs_data$IPVind ==1), 0,
                                                     ifelse(dhs_data$h8 ==1 | dhs_data$h8 ==2 | dhs_data$h8 ==3, 1,
-                                                           "NA")))} 
-  # Fix DTP for Tanzania in 2004 
- if (COUNTRY=="Tanzania" & YEAR==2004){
+                                                           "NA")))}
+  
+  if (COUNTRY=="Tanzania" & YEAR==2004){
     if ("DTP1" %in% VACCINES){
       dhs_data <- dhs_data %>% mutate("DTP1" = ifelse((dhs_data$POLIO1 ==1 & dhs_data$DTP1==0), 1,
                                                       dhs_data$DTP1))}
@@ -683,18 +682,18 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                                     ifelse(dhs_data$v101>=25 & dhs_data$v101<=30, dhs_data$v101-3,
                                                            ifelse(dhs_data$v101>30, dhs_data$v101-5,dhs_data$v101))))
   }
-
+  
   if((COUNTRY[1]=="Tanzania") & (YEAR==2004)){
     dhs_data$GEO<-dhs_data$v101
     dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=22, dhs_data$v101-29, dhs_data$v101))
   }
-
+  
   if((COUNTRY[1]=="Tanzania") & (YEAR==2015)){
     dhs_data$GEO<-dhs_data$v101
     dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=26, dhs_data$v101-25, dhs_data$v101))
   }
   
-   if((COUNTRY[1]=="Tanzania") & (YEAR==2022)){
+  if((COUNTRY[1]=="Tanzania") & (YEAR==2022)){
     dhs_data$GEO<-dhs_data$v101
     dhs_data <- dhs_data %>% mutate("v101" = ifelse(dhs_data$v101>=27, dhs_data$v101-24, dhs_data$v101))
   }
@@ -775,7 +774,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     dhs_data[,nameref] = REF[j]
   }
   
-    # Correct geographiclabels if stored in sstate instead of v101
+  # Correct geographiclabels if stored in sstate instead of v101
   if(COUNTRY[1]=="Nigeria"){
     GEO_CI<- c(val_labels(dhs_data$sstate))
   } else{
@@ -815,7 +814,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                         if((COUNTRY[1]=="Madagascar") & (YEAR<=2021)){
                           GEO_CI<- c(val_labels(dhs_data$v024))
                         } else {
-                          if((COUNTRY[1]=="Tanzania") & ((YEAR<=2022))){
+                          if((COUNTRY[1]=="Tanzania") & (YEAR<=2022)){
                             GEO_CI<- c(val_labels(dhs_data$v024))
                           } else {
                           if(FLAG[1]==1){
@@ -1037,20 +1036,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     pred_probs_3 <- data.frame(hci_fair = prob)
     
     # Calculating the Direct Concentration Index
-    direct_ci <- ci(outcome = data_i[,i], ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CI")
+    direct_ci <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CI")
     CI_1 <- round(concentration_index(direct_ci), digits = 3)
     CI_1_95ciLB<- round(CI_1 - 1.96*sqrt(abs(direct_ci$variance)), digits = 3)
     CI_1_95ciUB<- round(CI_1 + 1.96*sqrt(abs(direct_ci$variance)), digits = 3)
     
     # Calculating the Horizontal Ineqity Index (HII) 
-    CIFair <- ci(outcome = pred_probs_3$hci_fair, ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CI")
+    CIFair <- ci(y = pred_probs_3$hci_fair, x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CI")
     CI_Fair <- concentration_index(CIFair)
     HII <- round((CI_1 - CI_Fair), digits = 3)
     HII_95ciLB<- round(HII - (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i]))), digits = 3)
     HII_95ciUB<- round(HII + (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i]))), digits = 3)
     
     # Calculating the Erreygers Corrected Composite Concentration Index 
-    CIE <- ci(outcome = data_i[,i], ineqvar = pred_probs_2$hci_du.response, weights = data_i$v005, type = "CIc")
+    CIE <- ci(y = data_i[,i], x = pred_probs_2$hci_du.response, wt=data_i$v005, type = "CIc")
     CI_E <- round(concentration_index(CIE), digits = 3)
     CI_E_95ciLB<- round(CI_E - 1.96*sqrt(abs(CIE$variance)), digits = 3)
     CI_E_95ciUB<- round(CI_E + 1.96*sqrt(abs(CIE$variance)), digits = 3)
@@ -1208,13 +1207,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
     RII_wealth<- round(SII_output[2], digits = 3) 
     
     #Create Errygers Corrected concentration index for socio-economic status
-    ci_errygers <- ci(outcome = data_i[,i], ineqvar = data_i[,FACT[4]], weights = data_i$v005, type = "CIc")
+    ci_errygers <- ci(x=data_i[,i],y=data_i[,FACT[4]],wt=data_i$v005,type = "CIc")
     CI_E_Wealth <- round(concentration_index(ci_errygers), digits = 3)
     CI_E_Wealth_95ciLB<- round(CI_E_Wealth - 1.96*sqrt(abs(ci_errygers$variance)), digits = 3)
     CI_E_Wealth_95ciUB<- round(CI_E_Wealth + 1.96*sqrt(abs(ci_errygers$variance)), digits = 3)
     
     #Create Wagstaff concentration index for socio-economic status
-    ci_wagstaff <- ci(outcome = data_i[,i], ineqvar =data_i[,FACT[4]], weights = data_i$v005, type = "CI")
+    ci_wagstaff <- ci(x=data_i[,i],y=data_i[,FACT[4]],wt=data_i$v005,type = "CI")
     CI_W_Wealth <- round(concentration_index(ci_wagstaff), digits = 3)
     CI_W_Wealth_95ciLB<- round(CI_W_Wealth - 1.96*sqrt(abs(ci_wagstaff$variance)), digits = 3)
     CI_W_Wealth_95ciUB<- round(CI_W_Wealth + 1.96*sqrt(abs(ci_wagstaff$variance)), digits = 3)
@@ -1413,20 +1412,20 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       pred_probs_3_k <- subset(pred_probs_3, (data_i$v101==k))
       
       # Calculating the Direct Concentration Index
-      direct_ci <- ci(outcome = data_k[,i], ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CI")
+      direct_ci <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CI")
       CI_1 <- concentration_index(direct_ci)
       CI_1_95ciLB<- CI_1 - 1.96*sqrt(abs(direct_ci$variance))
       CI_1_95ciUB<- CI_1 + 1.96*sqrt(abs(direct_ci$variance))
       
       # Calculating the Horizontal Ineqity Index (HII) 
-      CIFair <- ci(outcome = pred_probs_3_k$hci_fair, ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CI")
+      CIFair <- ci(y = pred_probs_3_k$hci_fair, x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CI")
       CI_Fair <- concentration_index(CIFair)
       HII <- CI_1 - CI_Fair
       HII_95ciLB<- HII - (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i])))
       HII_95ciUB<- HII + (1.96*sqrt((abs(direct_ci$variance) + abs(CIFair$variance))/length(data_i[,i])))
       
       # Calculating the Erreygers Corrected Concentration Index 
-      CIE <- ci(outcome = data_k[,i], ineqvar = pred_probs_2_k$hci_du.response, weights = data_k$v005, type = "CIc")
+      CIE <- ci(y = data_k[,i], x = pred_probs_2_k$hci_du.response, wt=data_k$v005, type = "CIc")
       CI_E <- concentration_index(CIE)
       CI_E_95ciLB<- CI_E - 1.96*sqrt(abs(CIE$variance))
       CI_E_95ciUB<- CI_E + 1.96*sqrt(abs(CIE$variance))
@@ -1560,13 +1559,13 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
         RII_wealth_GEO<- ifelse(SII_output[1]=="NA","NA",round(SII_output[2], digits = 3)) 
         
         #Create Errygers Corrected concentration index for socio-economic status
-        ci_errygers_GEO <- ci(outcome = data_k[,i], ineqvar = data_k[,FACT[4]], weights = data_k$v005, type = "CIc")
+        ci_errygers_GEO <- ci(x=data_k[,i],y=data_k[,FACT[4]],wt=data_k$v005,type = "CIc")
         CI_E_Wealth_GEO <- round(concentration_index(ci_errygers_GEO), digits = 3)
         CI_E_Wealth_95ciLB_GEO<- round(CI_E_Wealth_GEO - 1.96*sqrt(abs(ci_errygers_GEO$variance)), digits = 3)
         CI_E_Wealth_95ciUB_GEO<- round(CI_E_Wealth_GEO + 1.96*sqrt(abs(ci_errygers_GEO$variance)), digits = 3)
         
         #Create Wagstaff Corrected concentration index for socio-economic status
-        ci_wagstaff_GEO <- ci(outcome = data_k[,i], ineqvar = data_k[,FACT[4]], weights = data_k$v005, type = "CI")
+        ci_wagstaff_GEO <- ci(x=data_k[,i],y=data_k[,FACT[4]],wt=data_k$v005,type = "CI")
         CI_W_Wealth_GEO <- round(concentration_index(ci_wagstaff_GEO), digits = 3)
         CI_W_Wealth_95ciLB_GEO<- round(CI_W_Wealth_GEO - 1.96*sqrt(abs(ci_wagstaff_GEO$variance)), digits = 3)
         CI_W_Wealth_95ciUB_GEO<- round(CI_W_Wealth_GEO + 1.96*sqrt(abs(ci_wagstaff_GEO$variance)), digits = 3)
@@ -1619,7 +1618,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                          sex = weighted.mean(b4,v005)*100/2,
                                          insurance = weighted.mean(v481,v005))))
     
- if (COUNTRY=="Nigeria"){
+    if (COUNTRY=="Nigeria"){
       GEO_UNIT <- c(val_labels(dhs_data$sstate))
       GEO_NAMES <- names(GEO_UNIT)
       GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
@@ -1694,7 +1693,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
                                 GEO_NAMES <- names(GEO_UNIT)
                                 GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
                               } else  {
-                                if ((COUNTRY=="Tanzania")& ((YEAR<=2022))){
+                                if ((COUNTRY=="Tanzania")& (YEAR<=2022)){
                                   GEO_UNIT <- c(val_labels(dhs_data$v024))
                                   GEO_NAMES <- names(GEO_UNIT)
                                   GEO_LABEL<- paste(GEO_UNIT, GEO_NAMES, sep=" = ")
@@ -1773,12 +1772,12 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
       suppressMessages(
       if (COUNTRY=="Peru"){
           mapping$sdr_subnational_boundaries$REGCODE<- replace(mapping$sdr_subnational_boundaries$REGCODE, 14, 15)
-        }
+      } else {
       if (COUNTRY=="Tanzania"){
        map_data = left_join(mapping$sdr_subnational_boundaries2, map)
       } else {
       map_data = left_join(mapping$sdr_subnational_boundaries, map)
-      }
+      }}
       )
       maptitle_equity<- (ifelse(i=="ZERO","Zero-Dose Equity Heat Map",
                                 ifelse(i=="FULL","Fully Immunized Equity Heat Map", 
@@ -2000,6 +1999,7 @@ VERSE <- function(DATA,COUNTRY,YEAR,VACCINES,SCHEDULE,FACTORS,GEO,MAP) {
   
   return(output_list)
 }
+
 
 
 ##### Run Function #####
